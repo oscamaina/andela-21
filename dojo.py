@@ -1,7 +1,11 @@
 class Dojo():
 
 	def __init__(self):
-		pass
+		self.rooms = []
+		self.offices = []
+		self.livingSpaces = []
+		self.fellows = []
+		self.staffs = []
 
 	def create_room(self, room_name, room_type):
 		""" function to create a unique room space """
