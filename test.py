@@ -16,7 +16,7 @@ class TestCreateRoom(unittest.TestCase):
         office = self.dojo.create_room("office", "A04")
         new_no_offices = len(self.dojo.offices)
         self.assertEqual(office, "Office added successfully")
-        self.assertEqual(new_no_offices, current_no_offices+1)
+        self.assertEqual(new_no_offices-current_no_offices, 1)
 
     def test_adds_living_space_successfully(self):
         """
@@ -28,7 +28,7 @@ class TestCreateRoom(unittest.TestCase):
         living_space =self.dojo.create_room("living_space", "Arusha")
         new_no_livingSpaces = len(self.dojo.livingSpaces)
         self.assertEqual(living_space, "Living space added successfully")
-        self.assertEqual(new_no_livingSpaces, current_no_livingSpaces+1)
+        self.assertEqual(new_no_livingSpaces-current_no_livingSpaces,1)
 
     def test_room_exists(self):
         """Tests if room already exists"""
@@ -75,9 +75,3 @@ class TestAddingPersons(unittest.TestCase):
         """Tests adding person who's category is not staff or fellow"""
         new = self.dojo.add_person("Wekesa Maina", "Bootcamper", "N")
         self.assertEqual(new,"Wrong category. Can only be fellow or staff")
-        
-    def test_add_person_that_already_exist(self):
-        """ Should not duplicate persons """
-        self.dojo.add_person("Millicent Njuguna", "Fellow", "Y")
-        new = self.dojo.add_person("Millicent Njuguna", "Fellow", "Y")
-        self.assertEqual(new, "Person already exists")
