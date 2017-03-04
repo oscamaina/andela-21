@@ -15,8 +15,8 @@ class TestCreateRoom(unittest.TestCase):
         current_no_offices = len(self.dojo.offices)
         office = self.dojo.create_room("office", "A04")
         new_no_offices = len(self.dojo.offices)
-        self.assertEqual(office, "Office added successfully")
-        self.assertEqual(new_no_offices-current_no_offices, 1)
+        self.assertEqual(office, "Office a04 added successfully")
+        self.assertEqual(new_no_offices-current_no_offices,1)
 
     def test_adds_living_space_successfully(self):
         """
@@ -25,16 +25,16 @@ class TestCreateRoom(unittest.TestCase):
 
         """
         current_no_livingSpaces = len(self.dojo.livingSpaces)
-        living_space =self.dojo.create_room("living_space", "Arusha")
+        living_space =self.dojo.create_room("living", "Arusha")
         new_no_livingSpaces = len(self.dojo.livingSpaces)
-        self.assertEqual(living_space, "Living space added successfully")
+        self.assertEqual(living_space, "Living space arusha added successfully")
         self.assertEqual(new_no_livingSpaces-current_no_livingSpaces,1)
 
     def test_room_exists(self):
         """Tests if room already exists"""
         self.dojo.create_room("office", "Bujumbura")
         room =self.dojo.create_room("office", "Bujumbura")
-        self.assertEqual(room,"Room already exists")
+        self.assertEqual(room,"Room with name bujumbura already exists")
 
     def test_create_wrong_room_type(self):
         """ 
