@@ -3,6 +3,7 @@ class Room(object):
 	def __init__(self, room_name):
 		""" Initializing room attributes """
 		self.room_name = room_name
+		self.occupants = []
 
 class Office(Room):
 	""" Office class inheriting from room class"""
