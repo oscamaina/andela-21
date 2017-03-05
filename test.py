@@ -13,9 +13,9 @@ class TestCreateRoom(unittest.TestCase):
 
         """
         current_no_offices = len(self.dojo.offices)
-        office = self.dojo.create_room("office", "A04")
+        office = self.dojo.create_room("office", ["A04"])
         new_no_offices = len(self.dojo.offices)
-        self.assertEqual(office, "Office a04 added successfully")
+        self.assertEqual(office, "Office a04 added successfully \n")
         self.assertEqual(new_no_offices-current_no_offices,1)
 
     def test_adds_living_space_successfully(self):
@@ -25,16 +25,16 @@ class TestCreateRoom(unittest.TestCase):
 
         """
         current_no_livingSpaces = len(self.dojo.livingSpaces)
-        living_space =self.dojo.create_room("living", "Arusha")
+        living_space =self.dojo.create_room("living", ["Arusha"])
         new_no_livingSpaces = len(self.dojo.livingSpaces)
-        self.assertEqual(living_space, "Living space arusha added successfully")
+        self.assertEqual(living_space, "Living space arusha added successfully \n")
         self.assertEqual(new_no_livingSpaces-current_no_livingSpaces,1)
 
     def test_room_exists(self):
         """Tests if room already exists"""
-        self.dojo.create_room("office", "Bujumbura")
-        room =self.dojo.create_room("office", "Bujumbura")
-        self.assertEqual(room,"Room with name bujumbura already exists")
+        self.dojo.create_room("office", ["Bujumbura"])
+        room =self.dojo.create_room("office", ["Bujumbura"])
+        self.assertEqual(room,"Room with name bujumbura already exists \n")
 
     def test_create_wrong_room_type(self):
         """ 
@@ -43,9 +43,9 @@ class TestCreateRoom(unittest.TestCase):
 
         """
         current_no_rooms = len(self.dojo.rooms)
-        room = self.dojo.create_room("social_hall", "Stam")
+        room = self.dojo.create_room("social_hall", ["Stam"])
         new_no_rooms = len(self.dojo.rooms)
-        self.assertEqual(room, "Wrong room type")
+        self.assertEqual(room, "Wrong room type \n")
         self.assertEqual(current_no_rooms, new_no_rooms)
 
 class TestAddingPersons(unittest.TestCase):
