@@ -12,31 +12,34 @@ class Dojo():
 		self.fellows = []
 		self.staffs = []
 
-	def create_room(self, room_type, room_name):
+	def create_room(self, room_type, room_names):
 		""" function to create a unique room space """
-		room_name = room_name.lower()
-		room_type = room_type.lower()
-		occupants = []
-		room_capacity = (6 if room_type=='office' else 4)
+		msg = ''
+		for name in room_names:
+			room_name = name.lower()
+			room_type = room_type.lower()
+			occupants = []
+			room_capacity = (6 if room_type=='office' else 4)
 
-		current_rooms = []
-		for room in self.rooms:
-			current_rooms.append(room['room_name'])
-		if room_name in current_rooms:
-			return "Room with name " + room_name + " already exists"
-		else:
-			if room_type in ('office', 'living'):
-				self.rooms.append({'room_name': room_name, 'occupants': occupants, 'type': room_type, 'room_capacity': room_capacity})
-				if room_type == 'office':
-					room = Office(room_name)
-					self.offices.append({'room_name': room_name, 'occupants': occupants, 'room_capacity': room_capacity})
-					return "Office added successfully"
-				elif room_type == 'living':
-					room = LivingSpace(room_name)
-					self.livingSpaces.append({'room_name': room_name, 'occupants': occupants, 'room_capacity': room_capacity})
-					return "Living space added successfully"
+			current_rooms = []
+			for room in self.rooms:
+				current_rooms.append(room['room_name'])
+			if room_name in current_rooms:
+				msg += "Room with name " + room_name + " already exists \n"
 			else:
-				return "Wrong room type"
+				if room_type in ('office', 'living'):
+					self.rooms.append({'room_name': room_name, 'occupants': occupants, 'type': room_type, 'room_capacity': room_capacity})
+					if room_type == 'office':
+						room = Office(room_name)
+						self.offices.append({'room_name': room_name, 'occupants': occupants, 'room_capacity': room_capacity})
+						msg += "Office " + room_name + " added successfully \n"
+					elif room_type == 'living':
+						room = LivingSpace(room_name)
+						self.livingSpaces.append({'room_name': room_name, 'occupants': occupants, 'room_capacity': room_capacity})
+						msg += "Living space " + room_name + " added successfully \n"
+				else:
+					msg += "Wrong room type \n"
+		return msg
 
 		
 	def add_person(self, name, category, accomodation="N"):
@@ -51,7 +54,7 @@ class Dojo():
 		for person in self.staffs:
 			people.append(person['name'])
 		if name in people:
-			choice = input("Name has already been used, Enter Y to proceed or C to cancel:")
+			choice = input(name + " has already been used, Enter Y to proceed or C to cancel:")
 			if choice.upper() not in ['Y', 'C']:
 				return "Invalid choice"
 			elif choice.upper() == 'C':
@@ -81,25 +84,26 @@ class Dojo():
 			return "Wrong category. Can only be fellow or staff"
 
 	def allocate_office(self, name):
-
+		""" Allocates office to person added """
 		if len(self.offices) > 0:
 			room = randint(0, len(self.offices)-1)
-			office_allocated = self.offices[room]
-			if len(office_allocated['occupants']) < office_allocated['room_capacity']:
-				office_allocated['occupants'].append(name)
-				return "Allocated " + name + " to " + office_allocated['room_name']
+			office_allocate = self.offices[room]
+			if len(office_allocate['occupants']) < office_allocate['room_capacity']:
+				office_allocate['occupants'].append(name)
+				return "Allocated " + name + " to " + office_allocate['room_name'] + " office"
 			else:
 				return "No offices with space"
 		else:
 			return "No available offices"
 
 	def allocate_living(self, name):
+		""" Allocates living space to fellow added """
 		if len(self.livingSpaces) > 0:
 			room = randint(0, len(self.livingSpaces)-1)
-			living_allocated = self.livingSpaces[room]
-			if len(living_allocated['occupants']) < living_allocated['room_capacity']:
-				living_allocated['occupants'].append(name)
-				return "Allocated " + name + " to " + living_allocated['room_name']
+			living_allocate = self.livingSpaces[room]
+			if len(living_allocate['occupants']) < living_allocate['room_capacity']:
+				living_allocate['occupants'].append(name)
+				return "Allocated " + name + " to " + living_allocate['room_name'] + " Living space"
 			else:
 				return "No Living rooms with space"
 		else:
