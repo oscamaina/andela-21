@@ -4,7 +4,9 @@ This example uses docopt with the built in cmd module to demonstrate an
 interactive command application.
 Usage:
     app.py create_room <room_type> <room_name>...
-    app.py add_person <name> <category> [<accommodation>]
+    app.py add_person <first_name> <second_name> <category> [<accommodation>]
+    app.py print_room <room_name>
+    app.py print_allocations [-o <filename>]
     app.py exit
     app.py (-i | --interactive)
     app.py (-h | --help)
@@ -61,25 +63,41 @@ class Allocation(cmd.Cmd):
 
     @docopt_cmd
     def do_create_room(self, arg):
-        """Usage: create_room <room_type> <room_name>"""
+        """Usage: create_room <room_type> <room_name>..."""
         room_type = arg['<room_type>']
-        room_name = arg['<room_name>']
+        room_name = list(arg['<room_name>'])
         print (self.funt.create_room(room_type, room_name))
+
     @docopt_cmd
     def do_add_person(self, arg):
-        """ Usage: add_person <name> <category> [<accommodation>] """
-        name = arg["<name>"]
+        """ Usage: add_person <first_name> <second_name> <category> [<accommodation>] """
+        fname = arg["<first_name>"]
+        lname = arg["<second_name>"]
         category = arg["<category>"]
         accomodate = arg["<accommodation>"]
         if accomodate:
-            self.funt.add_person(name, category, accomodate)
+            print(self.funt.add_person(fname, lname, category, accomodate))
         else:
-            self.funt.add_person(name, category)
+            print(self.funt.add_person(fname, lname, category))
+
+    @docopt_cmd
+    def do_print_room(self, arg):
+        """
+        Usage: print_room <room_name>
+        """
+        room_name = (arg['<room_name>'])
+        print(self.funt.print_room(room_name))
+
+    @docopt_cmd
+    def do_print_allocations(self, arg):
+        """
+        Usage: print_allocations [-o <filename>]
+        """
+        print(self.funt.print_allocations())
 
     def do_exit(self, arg):
         """Usage: exit"""
-        print ("CLOSING APPLICATION!.....")
-
+        print ("Bye..")
         exit()
 
 if __name__ == '__main__':
