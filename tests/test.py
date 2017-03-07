@@ -1,6 +1,6 @@
 import unittest
-from dojo import Dojo
-from rooms import Room, Office, LivingSpace
+from app.dojo import Dojo
+from app.rooms import Room, Office, LivingSpace
 
 class TestCreateRoom(unittest.TestCase):
     """Test cases for creating room"""
