@@ -1,6 +1,6 @@
 from random import choice
-from models.rooms import Room, Office, LivingSpace
-from models.person import Person, Fellow, Staff
+from app.rooms import Room, Office, LivingSpace
+from app.person import Person, Fellow, Staff
 
 
 class Dojo():
@@ -75,29 +75,32 @@ class Dojo():
 		else:
 			return "Wrong category. Can only be fellow or staff"
 
-		def allocate_office(self, full_name):
-			""" filters offices with space and
-			allocates office to person added
-			"""
-			office_with_space = []
-			for office_allocate in self.offices:
-				if len(office_allocate.occupants) < office_allocate.max_capacity:
-					office_with_space.append(office_allocate)
+	def allocate_office(self, full_name):
+		"""
+		filters offices with space and
+		allocates office to person added
+		"""
+		office_with_space = []
+		for office_allocate in self.offices:
+			if len(office_allocate.occupants) < office_allocate.max_capacity:
+				office_with_space.append(office_allocate)
 
-			if len(office_with_space) > 0:
-				random_office = choice(office_with_space)
-				if len(random_office.occupants) < random_office.max_capacity:
-					random_office.occupants.append(full_name)
-					return "Allocated " + full_name + " to " + \
-					random_office.room_name + " Office space"
-				else:
-					return "No offices with space"
+		if len(office_with_space) > 0:
+			random_office = choice(office_with_space)
+			if len(random_office.occupants) < random_office.max_capacity:
+				random_office.occupants.append(full_name)
+				return "Allocated " + full_name + " to " + \
+				random_office.room_name + " Office space"
 			else:
-				return "No available offices"
+				return "No Living rooms with space"
+		else:
+			return "No available living rooms"
 
 	def allocate_living(self, full_name):
-		""" filters living rooms with space
-		and allocates living space to fellow requested """
+		"""
+		    filters living rooms with space
+		    and allocates living space to fellow requested """
+
 		living_with_space = []
 		for living_allocate in self.livingSpaces:
 			if len(living_allocate.occupants) < living_allocate.max_capacity:
