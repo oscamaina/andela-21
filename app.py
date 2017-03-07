@@ -59,14 +59,13 @@ class Allocation(cmd.Cmd):
     prompt = '>> '
     file = None
 
-    funt = dojo.Dojo()
 
     @docopt_cmd
     def do_create_room(self, arg):
         """Usage: create_room <room_type> <room_name>..."""
         room_type = arg['<room_type>']
         room_name = list(arg['<room_name>'])
-        print (self.funt.create_room(room_type, room_name))
+        print (self.dojo.create_room(room_type, room_name))
 
     @docopt_cmd
     def do_add_person(self, arg):
@@ -76,9 +75,9 @@ class Allocation(cmd.Cmd):
         category = arg["<category>"]
         accomodate = arg["<accommodation>"]
         if accomodate:
-            print(self.funt.add_person(fname, lname, category, accomodate))
+            print(self.dojo.add_person(fname, lname, category, accomodate))
         else:
-            print(self.funt.add_person(fname, lname, category))
+            print(self.dojo.add_person(fname, lname, category))
 
     @docopt_cmd
     def do_print_room(self, arg):
@@ -86,14 +85,14 @@ class Allocation(cmd.Cmd):
         Usage: print_room <room_name>
         """
         room_name = (arg['<room_name>'])
-        print(self.funt.print_room(room_name))
+        print(self.dojo.print_room(room_name))
 
     @docopt_cmd
     def do_print_allocations(self, arg):
         """
         Usage: print_allocations [-o <filename>]
         """
-        print(self.funt.print_allocations())
+        print(self.dojo.print_allocations())
 
     def do_exit(self, arg):
         """Usage: exit"""
