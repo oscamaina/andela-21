@@ -91,9 +91,9 @@ class Dojo():
 					return "Allocated " + full_name + " to " + \
 					random_office.room_name + " Office space"
 				else:
-					return "No Living rooms with space"
+					return "No offices with space"
 			else:
-				return "No available living rooms"
+				return "No available offices"
 
 	def allocate_living(self, full_name):
 		""" filters living rooms with space
