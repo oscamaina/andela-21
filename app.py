@@ -18,7 +18,7 @@ Options:
 
 import cmd
 from docopt import docopt, DocoptExit
-import dojo
+from app.dojo import Dojo
 
 
 def docopt_cmd(func):
