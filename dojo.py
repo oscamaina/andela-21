@@ -1,6 +1,6 @@
 from random import choice
-from rooms import Room, Office, LivingSpace
-from person import Person, Fellow, Staff
+from models.rooms import Room, Office, LivingSpace
+from models.person import Person, Fellow, Staff
 
 
 class Dojo():
@@ -75,28 +75,40 @@ class Dojo():
 		else:
 			return "Wrong category. Can only be fellow or staff"
 
-	def allocate_office(self, full_name):
-		""" Allocates office to person added """
+		def allocate_office(self, full_name):
+			""" filters offices with space and
+			allocates office to person added
+			"""
+			office_with_space = []
+			for office_allocate in self.offices:
+				if len(office_allocate.occupants) < office_allocate.max_capacity:
+					office_with_space.append(office_allocate)
 
-		if len(self.offices) > 0:
-			office_allocate = choice(self.offices)
-			if len(office_allocate.occupants) < office_allocate.max_capacity:
-				office_allocate.occupants.append(full_name)
-				return "Allocated " + full_name + " to " + \
-				office_allocate.room_name + " office"
+			if len(office_with_space) > 0:
+				random_office = choice(office_with_space)
+				if len(random_office.occupants) < random_office.max_capacity:
+					random_office.occupants.append(full_name)
+					return "Allocated " + full_name + " to " + \
+					random_office.room_name + " Office space"
+				else:
+					return "No Living rooms with space"
 			else:
-				return "No offices with space"
-		else:
-			return "No available offices"
+				return "No available living rooms"
 
 	def allocate_living(self, full_name):
-		""" Allocates living space to fellow added """
-		if len(self.livingSpaces) > 0:
-			living_allocate = choice(self.livingSpaces)
+		""" filters living rooms with space
+		and allocates living space to fellow requested """
+		living_with_space = []
+		for living_allocate in self.livingSpaces:
 			if len(living_allocate.occupants) < living_allocate.max_capacity:
-				living_allocate.occupants.append(full_name)
+				living_with_space.append(living_allocate)
+
+		if len(living_with_space) > 0:
+			random_living_space = choice(living_with_space)
+			if len(random_living_space.occupants) < random_living_space.max_capacity:
+				random_living_space.occupants.append(full_name)
 				return "Allocated " + full_name + " to " + \
-				living_allocate.room_name + " Living space"
+				random_living_space.room_name + " Living space"
 			else:
 				return "No Living rooms with space"
 		else:
