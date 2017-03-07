@@ -1,9 +1,11 @@
 import unittest
 from app.dojo import Dojo
-from app.rooms import Room, Office, LivingSpace
+from app.rooms import Office, LivingSpace
+from app.person import Fellow, Staff
 
 class TestCreateRoom(unittest.TestCase):
     """Test cases for creating room"""
+
     def setUp(self):
         self.dojo = Dojo()
 
@@ -16,7 +18,7 @@ class TestCreateRoom(unittest.TestCase):
         current_no_offices = len(self.dojo.offices)
         office = self.dojo.create_room("office", ["A04"])
         room = Office('kigali')
-        self.assertIsInstance(room, Room)
+        self.assertIsInstance(room, Office)
         new_no_offices = len(self.dojo.offices)
         self.assertEqual(office, "Office a04 added successfully \n")
         self.assertEqual(new_no_offices-current_no_offices,1)
@@ -27,11 +29,11 @@ class TestCreateRoom(unittest.TestCase):
         increases the number of living_spaces.
 
         """
-        current_no_livingSpaces = len(self.dojo.livingSpaces)
+        current_no_livingSpaces = len(self.dojo.living_spaces)
         living_space =self.dojo.create_room("living", ["Arusha"])
         room = LivingSpace('java')
-        self.assertIsInstance(room, Room)
-        new_no_livingSpaces = len(self.dojo.livingSpaces)
+        self.assertIsInstance(room, LivingSpace)
+        new_no_livingSpaces = len(self.dojo.living_spaces)
         self.assertEqual(living_space, "Living space arusha added successfully\n")
         self.assertEqual(new_no_livingSpaces-current_no_livingSpaces,1)
 
@@ -65,18 +67,22 @@ class TestAddingPersons(unittest.TestCase):
 
         """
         current_no_fellows = len(self.dojo.fellows)
-        self.dojo.add_person('Kipyegon Ken', 'Fellow')
+        self.dojo.add_person('Kipyegon','ken', 'Fellow')
+        person = Fellow('Maina','Wekesa')
+        self.assertIsInstance(person, Fellow)
         new_no_fellows = len(self.dojo.fellows)
         self.assertEqual(new_no_fellows-current_no_fellows, 1)
 
     def test_successfully_adds_staff_to_system(self):
         """ Should add staff to the system """
         current_no_staff = len(self.dojo.staffs)
-        self.dojo.add_person('Shem Ogube', 'Staff')
+        self.dojo.add_person('Shem','Ogube', 'Staff')
+        person = Staff('Ken','Kipyegon')
+        self.assertIsInstance(person, Staff)
         new_no_staff = len(self.dojo.staffs)
         self.assertEqual(new_no_staff-current_no_staff, 1)
 
     def test_adding_person_with_invalid_category(self):
         """Tests adding person who's category is not staff or fellow"""
-        new = self.dojo.add_person("Wekesa Maina", "Bootcamper", "N")
+        new = self.dojo.add_person("Wekesa','Maina", "Bootcamper", "N")
         self.assertEqual(new,"Wrong category. Can only be fellow or staff")
