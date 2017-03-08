@@ -44,13 +44,11 @@ class Dojo():
 
 	def add_person(self, first_name, last_name, category, accomodation="N"):
 		""" function to add a person """
-
 		if isinstance(first_name, str) and isinstance(last_name, str):
 			if category.lower() == "fellow":
 				person = Fellow(first_name, last_name, accomodation)
 				person.id = int(len(self.all_people)+1)
 				self.fellows.append(person)
-
 				self.all_people.append(person)
 				if accomodation.upper() == 'Y':
 					return "Fellow " + person.first_name + " " + \
@@ -74,6 +72,9 @@ class Dojo():
 					+ str(person.id) + " and " + self.allocate_office(person)
 			else:
 				return "Wrong category. Can only be fellow or staff"
+		else:
+			return "Invalid name"
+
 	def allocate_office(self, person):
 		""" Allocates office to person added """
 
