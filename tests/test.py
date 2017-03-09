@@ -92,3 +92,48 @@ class TestAddingPersons(unittest.TestCase):
         """Tests adding person who's category is not staff or fellow"""
         new = self.dojo.add_person("Wekesa','Maina", "Bootcamper", "N")
         self.assertEqual(new,"Wrong category. Can only be fellow or staff")
+
+class TestPrintingRoom(unittest.TestCase):
+    """ Test cases for printing Room and its occupants """
+    def setUp(self):
+        self.dojo = Dojo()
+
+    def test_print_room_that_does_not_exist(self):
+        """ Should not print a room that is not in the system """
+        room_print = self.dojo.print_room('Entebbe')
+        self.assertEqual(room_print, "Room name Entebbe doesn't exist")
+
+    def test_prints_room_occupants(self):
+        """ Should print all the occupants of a specified room """
+        self.dojo.create_room("office", ["Django"])
+        self.dojo.add_person('Dennis', 'Wachiuri', 'Fellow')
+        room=self.dojo.print_room('Django')
+        self.assertIn("Dennis Wachiuri", "room")
+
+    def test_prints_empty_for_unoccupied_room(self):
+        """ Prints null if specified room is empty """
+        self.dojo.create_room("office", ["Django"])
+        r_print = self.dojo.print_room('Django')
+        self.assertEqual(r_print, "Django has no occupants")
+
+class TestPrintAllocatedUnallocated(unittest.TestCase):
+    """ Test case for printing allocations """
+    def setUp(self):
+        self.dojo = Dojo()
+
+    def test_prints_allocations_successfully(self):
+        """ should return allocated persons and unallocated persons"""
+        self.dojo.create_room("living", ["Django"])
+        # person 1 to 4 should be allocated to living Room Django
+        self.dojo.add_person('Dennis', 'Person1', 'Fellow')
+        self.dojo.add_person('Dennis', 'Person2', 'Fellow')
+        self.dojo.add_person('Dennis', 'Person3', 'Staff')
+        self.dojo.add_person('Dennis', 'Person4', 'Fellow')
+
+        # person 5 should be unallocated
+        self.dojo.add_person('Dennis', 'Person5', 'Fellow')
+
+        allocated = self.dojo.print_allocations()
+        unallocated = self.dojo.print_unallocated()
+        self.assertIn('Dennis Person5', allocated)
+        self.assertIn("Dennis Person7", unallocated)
