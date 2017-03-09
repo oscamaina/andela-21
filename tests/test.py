@@ -108,7 +108,7 @@ class TestPrintingRoom(unittest.TestCase):
         self.dojo.create_room("office", ["Django"])
         self.dojo.add_person('Dennis', 'Wachiuri', 'Fellow')
         room=self.dojo.print_room('Django')
-        self.assertIn("Dennis Wachiuri", "room")
+        self.assertIn("Dennis Wachiuri", room)
 
     def test_prints_empty_for_unoccupied_room(self):
         """ Prints null if specified room is empty """
