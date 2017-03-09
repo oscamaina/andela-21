@@ -79,36 +79,32 @@ class Dojo():
 		""" Allocates office to person added """
 
 		office_with_space = []
+		#filters offices and returns offices with space
 		for office_allocate in self.offices:
 			if len(office_allocate.occupants) < office_allocate.max_capacity:
 				office_with_space.append(office_allocate)
 
 		if len(office_with_space) > 0:
 			random_office = choice(office_with_space)
-			if len(random_office.occupants) < random_office.max_capacity:
-				random_office.occupants.append(person)
-				return "allocated to " + random_office.room_name \
+			random_office.occupants.append(person)
+			return "allocated to " + random_office.room_name \
 				 + " Office space"
-			else:
-				return "No offices with space"
 		else:
-			return "No available office rooms"
+			return "No offices with space available"
 
 	def allocate_living(self, person):
 		""" Allocates living space to fellow added """
 
 		living_with_space = []
+		#filters living_spaces and returns ones with space
 		for living_allocate in self.living_spaces:
 			if len(living_allocate.occupants) < living_allocate.max_capacity:
 				living_with_space.append(living_allocate)
 
 		if len(living_with_space) > 0:
 			random_living_space = choice(living_with_space)
-			if len(random_living_space.occupants) < random_living_space.max_capacity:
-				random_living_space.occupants.append(person)
-				return "allocated to " + random_living_space.room_name \
-				 + " Living space"
-			else:
-				return "No Living rooms with space"
+			random_living_space.occupants.append(person)
+			return "allocated to " + random_living_space.room_name \
+			 + " Living space"
 		else:
-			return "No available living rooms"
+			return "No living rooms with space available"
