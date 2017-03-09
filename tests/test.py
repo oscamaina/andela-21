@@ -125,13 +125,13 @@ class TestPrintAllocatedUnallocated(unittest.TestCase):
         """ should return allocated persons and unallocated persons"""
         self.dojo.create_room("living", ["Django"])
         # person 1 to 4 should be allocated to living Room Django
-        self.dojo.add_person('Dennis', 'Person1', 'Fellow')
-        self.dojo.add_person('Dennis', 'Person2', 'Fellow')
-        self.dojo.add_person('Dennis', 'Person3', 'Staff')
-        self.dojo.add_person('Dennis', 'Person4', 'Fellow')
+        self.dojo.add_person('Dennis', 'Person1', 'Fellow', 'Y')
+        self.dojo.add_person('Dennis', 'Person2', 'Fellow', 'Y')
+        self.dojo.add_person('Dennis', 'Person3', 'Fellow', 'Y')
+        self.dojo.add_person('Dennis', 'Person4', 'Fellow', 'Y')
 
         # person 5 should be unallocated
-        self.dojo.add_person('Dennis', 'Person5', 'Fellow')
+        self.dojo.add_person('Dennis', 'Person5', 'Fellow' 'Y')
 
         allocated = self.dojo.print_allocations()
         unallocated = self.dojo.print_unallocated()
