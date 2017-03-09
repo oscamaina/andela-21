@@ -108,3 +108,15 @@ class Dojo():
 			 + " Living space"
 		else:
 			return "No living rooms with space available"
+
+	def print_room(self, room_name):
+		""" Returns all occupants of a specific room """
+		pass
+
+	def print_allocations(self, file=None):
+		""" Returns all occupants of a specific room """
+		pass
+
+	def print_unallocated(self, file=None):
+		""" Returns all occupants of a specific room """
+		pass
