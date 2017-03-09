@@ -57,7 +57,6 @@ class Allocation(cmd.Cmd):
         + ' (type help for a list of commands.)'
     print(__doc__)
     prompt = '>> '
-    file = None
 
     funt = Dojo()
 
