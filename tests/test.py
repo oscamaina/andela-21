@@ -22,9 +22,8 @@ class TestCreateRoom(unittest.TestCase):
 
         """
         current_no_offices = len(self.dojo.offices)
-        office = self.dojo.create_room("office", ["A04"])
-        room = Office('kigali')
-        self.assertIsInstance(room, Office)
+        office_space = self.dojo.create_room("office", ["A04"])
+        self.assertIsInstance(office_space, Office)
         new_no_offices = len(self.dojo.offices)
         self.assertEqual(office, "Office a04 added successfully \n")
         self.assertEqual(new_no_offices-current_no_offices,1)
@@ -37,8 +36,7 @@ class TestCreateRoom(unittest.TestCase):
         """
         current_no_livingSpaces = len(self.dojo.living_spaces)
         living_space =self.dojo.create_room("living", ["Arusha"])
-        room = LivingSpace('java')
-        self.assertIsInstance(room, LivingSpace)
+        self.assertIsInstance(living_space, LivingSpace)
         new_no_livingSpaces = len(self.dojo.living_spaces)
         self.assertEqual(living_space, "Living space arusha added successfully\n")
         self.assertEqual(new_no_livingSpaces-current_no_livingSpaces,1)
@@ -73,8 +71,7 @@ class TestAddingPersons(unittest.TestCase):
 
         """
         current_no_fellows = len(self.dojo.fellows)
-        self.dojo.add_person('Kipyegon','ken', 'Fellow')
-        person = Fellow('Maina','Wekesa')
+        person = self.dojo.add_person('Kipyegon','ken', 'Fellow')
         self.assertIsInstance(person, Fellow)
         new_no_fellows = len(self.dojo.fellows)
         self.assertEqual(new_no_fellows-current_no_fellows, 1)
@@ -82,8 +79,7 @@ class TestAddingPersons(unittest.TestCase):
     def test_successfully_adds_staff_to_system(self):
         """ Should add staff to the system """
         current_no_staff = len(self.dojo.staffs)
-        self.dojo.add_person('Shem','Ogube', 'Staff')
-        person = Staff('Ken','Kipyegon')
+        person = self.dojo.add_person('Shem','Ogube', 'Staff')
         self.assertIsInstance(person, Staff)
         new_no_staff = len(self.dojo.staffs)
         self.assertEqual(new_no_staff-current_no_staff, 1)
@@ -120,20 +116,20 @@ class TestPrintAllocatedUnallocated(unittest.TestCase):
     """ Test case for printing allocations """
     def setUp(self):
         self.dojo = Dojo()
-
-    def test_prints_allocations_successfully(self):
-        """ should return allocated persons and unallocated persons"""
         self.dojo.create_room("living", ["Django"])
         # person 1 to 4 should be allocated to living Room Django
-        self.dojo.add_person('Dennis', 'Person1', 'Fellow', 'Y')
-        self.dojo.add_person('Dennis', 'Person2', 'Fellow', 'Y')
-        self.dojo.add_person('Dennis', 'Person3', 'Fellow', 'Y')
-        self.dojo.add_person('Dennis', 'Person4', 'Fellow', 'Y')
+        self.dojo.add_person('Dennis', 'Person1', 'Fellow' , 'Y')
+        self.dojo.add_person('Dennis', 'Person2', 'Fellow' , 'Y')
+        self.dojo.add_person('Dennis', 'Person3', 'Fellow' , 'Y')
+        self.dojo.add_person('Dennis', 'Person4', 'Fellow' , 'Y')
 
         # person 5 should be unallocated
-        self.dojo.add_person('Dennis', 'Person5', 'Fellow' 'Y')
+        self.dojo.add_person('Dennis', 'Person5', 'Fellow' , 'Y')
 
+    def test_prints_allocated_successfully(self):
         allocated = self.dojo.print_allocations()
-        unallocated = self.dojo.print_unallocated()
         self.assertIn('Dennis Person5', allocated)
+
+    def test_prints_unallocated_successfully(self):
+        unallocated = self.dojo.print_unallocated()
         self.assertIn("Dennis Person7", unallocated)
