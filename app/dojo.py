@@ -12,6 +12,7 @@ class Dojo():
 		self.all_people = []
 		self.fellows = []
 		self.staffs = []
+		self.waiting_to_allocate = []
 
 	def create_room(self, room_type, room_names):
 		""" function to create a unique room space """
@@ -50,6 +51,7 @@ class Dojo():
 				person.id = int(len(self.all_people)+1)
 				self.fellows.append(person)
 				self.all_people.append(person)
+				self.waiting_to_allocate.append(person)
 				if accomodation.upper() == 'Y':
 					return "Fellow " + person.first_name + " " + \
 					 person.last_name + " added successfully with id " \
@@ -67,6 +69,7 @@ class Dojo():
 					person.id = int(len(self.all_people)+1)
 					self.staffs.append(person)
 					self.all_people.append(person)
+					self.waiting_to_allocate.append(person)
 					return "Staff " + person.first_name + " " + \
 					person.last_name + " added successfully with id " \
 					+ str(person.id) + " and " + self.allocate_office(person)
@@ -84,13 +87,15 @@ class Dojo():
 			if len(office_allocate.occupants) < office_allocate.max_capacity:
 				office_with_space.append(office_allocate)
 
-		if len(office_with_space) > 0:
-			random_office = choice(office_with_space)
-			random_office.occupants.append(person)
-			return "allocated to " + random_office.room_name \
-				 + " Office space"
-		else:
-			return "No offices with space available"
+		if (person.category == "staff" or (person.category == "fellow" and person.accomodation.upper() == "N")):
+			if len(office_with_space) > 0:
+				random_office = choice(office_with_space)
+				random_office.occupants.append(person)
+				self.waiting_to_allocate.remove(person)
+				return "allocated to " + random_office.room_name \
+					 + " Office space"
+			else:
+				return "No offices with space available"
 
 	def allocate_living(self, person):
 		""" Allocates living space to fellow added """
@@ -104,6 +109,7 @@ class Dojo():
 		if len(living_with_space) > 0:
 			random_living_space = choice(living_with_space)
 			random_living_space.occupants.append(person)
+			self.waiting_to_allocate.remove(person)
 			return "allocated to " + random_living_space.room_name \
 			 + " Living space"
 		else:
@@ -111,12 +117,25 @@ class Dojo():
 
 	def print_room(self, room_name):
 		""" Returns all occupants of a specific room """
+		found = False
+		current_occupants = ""
+		for room in self.all_rooms:
+			if room.room_name == room_name.lower():
+				found = True
+			if found:
+				if len(room.occupants) > 0:
+					for occupant in room.occupants:
+						current_occupants += ("{} {} {},".format(occupant.first_name, occupant.last_name, occupant.category))
+					return current_occupants
+				else:
+					return room_name + " has no occupants"
+		else:
+			return "Room name " + room_name + " doesn't exist"
+
+	def print_allocations(self, option=None):
+		""" Returns rooms occupied with there current occupants """
 		pass
 
-	def print_allocations(self, file=None):
-		""" Returns all occupants of a specific room """
-		pass
-
-	def print_unallocated(self, file=None):
-		""" Returns all occupants of a specific room """
+	def print_unallocated(self, option=None):
+		""" Returns all persons yet to be allocated rooms """
 		pass
