@@ -6,7 +6,8 @@ Usage:
     app.py create_room <room_type> <room_name>...
     app.py add_person <first_name> <second_name> <category> [<accommodation>]
     app.py print_room <room_name>
-    app.py print_allocations [-o <filename>]
+    app.py print_allocations [-o =filename]
+    app.py print_unallocated [-o =filename]
     app.py exit
     app.py (-i | --interactive)
     app.py (-h | --help)
@@ -84,15 +85,26 @@ class Allocation(cmd.Cmd):
         """
         Usage: print_room <room_name>
         """
-        room_name = (arg['<room_name>'])
-        print(self.print_room(room_name))
+        room_name = arg['<room_name>']
+        print(self.funt.print_room(room_name))
 
     @docopt_cmd
     def do_print_allocations(self, arg):
         """
-        Usage: print_allocations [-o <filename>]
+        Usage: print_allocations [-o=filename]
         """
-        print(self.print_allocations())
+        print(self.funt.print_allocations())
+
+    @docopt_cmd
+    def do_print_unallocated(self, arg):
+        """
+        Usage: print_unallocated [-o=filename]
+        """
+        option = arg["-o"]
+        if option:
+            print(self.funt.print_unallocated(option))
+        else:
+            print(self.funt.print_unallocated())
 
     def do_exit(self, arg):
         """Usage: exit"""
