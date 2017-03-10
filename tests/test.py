@@ -71,16 +71,16 @@ class TestAddingPersons(unittest.TestCase):
 
         """
         current_no_fellows = len(self.dojo.fellows)
-        person = self.dojo.add_person('Kipyegon','ken', 'Fellow')
-        self.assertIsInstance(person, Fellow)
+        self.dojo.add_person('Kipyegon','ken', 'Fellow')
+        self.assertIsInstance("Kipyegon ken", Fellow)
         new_no_fellows = len(self.dojo.fellows)
         self.assertEqual(new_no_fellows-current_no_fellows, 1)
 
     def test_successfully_adds_staff_to_system(self):
         """ Should add staff to the system """
         current_no_staff = len(self.dojo.staffs)
-        person = self.dojo.add_person('Shem','Ogube', 'Staff')
-        self.assertIsInstance(person, Staff)
+        self.dojo.add_person('Shem','Ogube', 'Staff')
+        self.assertIsInstance("Shem Ogube", Staff)
         new_no_staff = len(self.dojo.staffs)
         self.assertEqual(new_no_staff-current_no_staff, 1)
 
