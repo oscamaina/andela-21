@@ -12,7 +12,8 @@ class Dojo():
 		self.all_people = []
 		self.fellows = []
 		self.staffs = []
-		self.waiting_to_allocate = []
+		self.waiting_to_allocate_living = []
+		self.waiting_to_allocate_office = []
 
 	def create_room(self, room_type, room_names):
 		""" function to create a unique room space """
@@ -51,15 +52,16 @@ class Dojo():
 				person.id = int(len(self.all_people)+1)
 				self.fellows.append(person)
 				self.all_people.append(person)
-				self.waiting_to_allocate.append(person)
+				self.waiting_to_allocate_office.append(person)
 				if accomodation.upper() == 'Y':
+					self.waiting_to_allocate_living.append(person)
 					return "Fellow " + person.first_name + " " + \
 					 person.last_name + " added successfully with id " \
-					 + str(person.id) + ", " + self.allocate_office(person) \
-					 + " and " + self.allocate_living(person)
+					 + str(person.id) + ", " + str(self.allocate_office(person)) \
+					 + " and " + str(self.allocate_living(person))
 				return "Fellow " + person.first_name + " " + person.last_name\
 				 + " added successfully with id " + str(person.id) + " and " \
-				+ self.allocate_office(person)
+				+ str(self.allocate_office(person))
 
 			elif category.lower() == "staff":
 				if accomodation.upper() == "Y":
@@ -69,10 +71,10 @@ class Dojo():
 					person.id = int(len(self.all_people)+1)
 					self.staffs.append(person)
 					self.all_people.append(person)
-					self.waiting_to_allocate.append(person)
+					self.waiting_to_allocate_office.append(person)
 					return "Staff " + person.first_name + " " + \
 					person.last_name + " added successfully with id " \
-					+ str(person.id) + " and " + self.allocate_office(person)
+					+ str(person.id) + " and " + str(self.allocate_office(person))
 			else:
 				return "Wrong category. Can only be fellow or staff"
 		else:
@@ -87,15 +89,14 @@ class Dojo():
 			if len(office_allocate.occupants) < office_allocate.max_capacity:
 				office_with_space.append(office_allocate)
 
-		if (person.category == "staff" or (person.category == "fellow" and person.accomodation.upper() == "N")):
-			if len(office_with_space) > 0:
-				random_office = choice(office_with_space)
-				random_office.occupants.append(person)
-				self.waiting_to_allocate.remove(person)
-				return "allocated to " + random_office.room_name \
-					 + " Office space"
-			else:
-				return "No offices with space available"
+		if len(office_with_space) > 0:
+			random_office = choice(office_with_space)
+			random_office.occupants.append(person)
+			self.waiting_to_allocate_office.remove(person)
+			return "allocated to " + random_office.room_name \
+				 + " Office space"
+		else:
+			return "No offices with space available"
 
 	def allocate_living(self, person):
 		""" Allocates living space to fellow added """
@@ -109,7 +110,7 @@ class Dojo():
 		if len(living_with_space) > 0:
 			random_living_space = choice(living_with_space)
 			random_living_space.occupants.append(person)
-			self.waiting_to_allocate.remove(person)
+			self.waiting_to_allocate_living.remove(person)
 			return "allocated to " + random_living_space.room_name \
 			 + " Living space"
 		else:
@@ -125,17 +126,80 @@ class Dojo():
 			if found:
 				if len(room.occupants) > 0:
 					for occupant in room.occupants:
-						current_occupants += ("{} {} {},".format(occupant.first_name, occupant.last_name, occupant.category))
+						current_occupants += ("{} {},".format\
+						(occupant.first_name, occupant.last_name))
 					return current_occupants
 				else:
 					return room_name + " has no occupants"
 		else:
 			return "Room name " + room_name + " doesn't exist"
 
-	def print_allocations(self, option=None):
+	def print_allocations(self, filename):
 		""" Returns rooms occupied with there current occupants """
-		pass
+		output = ""
+		members = ""
+		#filters all_rooms to return room with occupants
+		room_with_occupants = [room for room in self.all_rooms\
+		 if len(room.occupants) > 0]
 
-	def print_unallocated(self, option=None):
+		if len(room_with_occupants) > 0:
+			for room in room_with_occupants:
+				output += ("\n ROOM {} {}".format\
+				(room.room_name.upper(), room.room_type.upper()))
+				output += ("\n" + "-"*50 + "\n")
+				for occupant in room.occupants:
+					members += ("{} {} {},".format\
+					(occupant.first_name.upper(), \
+					occupant.last_name.upper(), occupant.category))
+				output += members
+
+			if filename is None:
+				return output
+			else:
+				txt_file = open(filename + ".txt", "w")
+				txt_file.write(output)
+				txt_file.close()
+				return("Data saved in {}.txt \n".format(filename) )
+		return "No allocations availabe"
+
+	def print_unallocated(self, filename):
 		""" Returns all persons yet to be allocated rooms """
-		pass
+		output = ''
+		if len(self.waiting_to_allocate_office) > 0:
+			output += "\nPersons yet to be allocated office space\n" + "-"*40
+			output += ("\nNAME" + " "*10 + "CATEGORY" + " "*5 + "ACCOMODATION")
+			for person in self.waiting_to_allocate_office:
+				if isinstance(person, Fellow):
+					output += ("\n{} {}     {}      {}".\
+					format(person.first_name, person.last_name,\
+					 person.category, person.accomodation))
+
+				elif isinstance(person, Staff):
+					output += ("\n{} {}      {}".format\
+					(person.first_name, person.last_name, person.category))
+		else:
+			output += "\n There are no unallocated persons for office \n"
+
+		if len(self.waiting_to_allocate_living) > 0:
+			output += "\nPersons yet to be allocated living space\n" + "-"*40
+			output += ("\nNAME" + " "*10 + "CATEGORY" + " "*5 + "ACCOMODATION")
+			for person in self.waiting_to_allocate_living:
+				if isinstance(person, Fellow):
+					output += ("\n{} {}     {}      {}".\
+					format(person.first_name, person.last_name, \
+					person.category, person.accomodation))
+
+				elif isinstance(person, Staff):
+					output += ("\n{} {}      {}".format\
+					(person.first_name, person.last_name, person.category))
+		else:
+			output += "\n There are no unallocated persons for living"
+
+		if filename is None:
+			return(output)
+
+		else:
+			txt_file = open(filename + ".txt", "w")
+			txt_file.write(output)
+			txt_file.close()
+			return("Data saved in {}.txt \n".format(filename) )
