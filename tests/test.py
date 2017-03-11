@@ -1,0 +1,139 @@
+import unittest
+import os
+import sys
+import inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+from app.dojo import *
+
+class TestCreateRoom(unittest.TestCase):
+    """Test cases for creating room"""
+
+    def setUp(self):
+        self.dojo = Dojo()
+
+    def test_adds_office_successfully(self):
+        """
+        Tests if room of type office can be added successfully
+        it should the increase the number of offices.
+
+        """
+        current_no_offices = len(self.dojo.offices)
+        self.dojo.create_room("office", ["A04"])
+        new_no_offices = len(self.dojo.offices)
+        self.assertEqual(new_no_offices-current_no_offices,1)
+
+    def test_adds_living_space_successfully(self):
+        """
+        Tests if room of type livingSpace can be added successfully
+        increases the number of living_spaces.
+
+        """
+        current_no_livingSpaces = len(self.dojo.living_spaces)
+        living_space =self.dojo.create_room("living", ["Arusha"])
+        new_no_livingSpaces = len(self.dojo.living_spaces)
+        self.assertEqual(living_space, "Living space arusha added successfully\n")
+        self.assertEqual(new_no_livingSpaces-current_no_livingSpaces,1)
+
+    def test_creating_room_that_exists(self):
+        """Should not accept duplicating rooms"""
+        self.dojo.create_room("office", ["Bujumbura"])
+        room =self.dojo.create_room("office", ["Bujumbura"])
+        self.assertEqual(room,"Room with name bujumbura already exists \n")
+
+    def test_create_wrong_room_type(self):
+        """
+        Tests adding wrong room type
+        should not increase the number of rooms
+
+        """
+        current_no_rooms = len(self.dojo.all_rooms)
+        room = self.dojo.create_room("social_hall", ["Stam"])
+        new_no_rooms = len(self.dojo.all_rooms)
+        self.assertEqual(room, "Wrong room type \n")
+        self.assertEqual(current_no_rooms, new_no_rooms)
+
+    def test_room_created_is_instance_of_room(self):
+        """ Should assert room created is an instance of a room """
+        self.dojo.create_room("office", ["A04"])
+        self.dojo.create_room("living", ["Arusha"])
+        self.assertIsInstance(self.dojo.offices[0], Office)
+        self.assertIsInstance(self.dojo.living_spaces[0], LivingSpace)
+
+class TestAddingPersons(unittest.TestCase):
+    """Test cases for Adding Persons"""
+    def setUp(self):
+        self.dojo = Dojo()
+
+    def test_successfully_adds_fellow_to_system(self):
+        """
+        Should add fellow to the system
+        and increase the number of fellows
+
+        """
+        current_no_fellows = len(self.dojo.fellows)
+        self.dojo.add_person('Kipyegon','ken', 'Fellow')
+        new_no_fellows = len(self.dojo.fellows)
+        self.assertEqual(new_no_fellows-current_no_fellows, 1)
+
+    def test_successfully_adds_staff_to_system(self):
+        """ Should add staff to the system """
+        current_no_staff = len(self.dojo.staffs)
+        self.dojo.add_person('Shem','Ogube', 'Staff')
+        new_no_staff = len(self.dojo.staffs)
+        self.assertEqual(new_no_staff-current_no_staff, 1)
+
+    def test_adding_person_with_invalid_category(self):
+        """Tests adding person who's category is not staff or fellow"""
+        new = self.dojo.add_person("Wekesa','Maina", "Bootcamper", "N")
+        self.assertEqual(new,"Wrong category. Can only be fellow or staff")
+
+    def test_person_added_is_instance_of_person(self):
+        """ Should assert the person added is an instance of Person """
+        self.dojo.add_person("Mengere", "John", "fellow", "Y")
+        self.dojo.add_person("Kipyegon", "Ken", "staff")
+        self.assertIsInstance(self.dojo.fellows[0], Fellow)
+        self.assertIsInstance(self.dojo.staffs[0], Staff)
+
+class TestPrintingRoom(unittest.TestCase):
+    """ Test cases for printing Room and its occupants """
+    def setUp(self):
+        self.dojo = Dojo()
+        self.dojo.create_room("office", ["Django"])
+
+    def test_print_room_that_does_not_exist(self):
+        """ Should not print a room that is not in the system """
+        self.assertEqual(self.dojo.print_room('Entebbe'), \
+        "Room name Entebbe doesn't exist")
+
+    def test_prints_room_occupants(self):
+        """ Should print all the occupants of a specified room """
+        self.dojo.add_person('Dennis', 'Wachiuri', 'Fellow')
+        self.assertIn("Dennis Wachiuri", self.dojo.print_room('Django'))
+
+    def test_prints_empty_for_unoccupied_room(self):
+        """ Prints null if specified room is empty """
+        self.assertEqual(self.dojo.print_room('Django'), "Django has no occupants")
+
+class TestPrintAllocatedUnallocated(unittest.TestCase):
+    """ Test case for printing allocations """
+    def setUp(self):
+        self.dojo = Dojo()
+        self.dojo.create_room("living", ["Django"])
+        # person 1 to 4 should be allocated to living Room Django
+        self.dojo.add_person('Dennis', 'Person1', 'Fellow' , 'Y')
+        self.dojo.add_person('Dennis', 'Person2', 'Fellow' , 'Y')
+        self.dojo.add_person('Dennis', 'Person3', 'Fellow' , 'Y')
+        self.dojo.add_person('Dennis', 'Person4', 'Fellow' , 'Y')
+
+        # person 5 should be unallocated
+        self.dojo.add_person('Dennis', 'Person5', 'Fellow' , 'Y')
+
+    def test_prints_allocated_successfully(self):
+        allocated = self.dojo.print_allocations()
+        self.assertIn('Dennis Person5', allocated)
+
+    def test_prints_unallocated_successfully(self):
+        unallocated = self.dojo.print_unallocated()
+        self.assertIn("Dennis Person7", unallocated)
