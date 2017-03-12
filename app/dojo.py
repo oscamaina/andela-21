@@ -1,4 +1,5 @@
 from random import choice
+
 from app.rooms import Room, Office, LivingSpace
 from app.person import Person, Fellow, Staff
 
@@ -160,7 +161,7 @@ class Dojo():
 				txt_file.write(output)
 				txt_file.close()
 				return("Data saved in {}.txt \n".format(filename) )
-		return "No allocations availabe"
+		return "No allocations available"
 
 	def print_unallocated(self, filename):
 		""" Returns all persons yet to be allocated rooms """
