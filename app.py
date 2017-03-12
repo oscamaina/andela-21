@@ -20,9 +20,18 @@ Options:
 import cmd
 from docopt import docopt, DocoptExit
 from app.dojo import Dojo
+from colorama import init
+from pyfiglet import Figlet
+from termcolor import cprint
 
+init()
+font = Figlet(font='slant')
+introd = font.renderText('Space Allocation')
+cprint(introd,"blue", attrs=['bold'])
 
 def docopt_cmd(func):
+
+
     """
     This decorator is used to simplify the try/except block and pass the result
     of the docopt parsing to the called action.
@@ -56,7 +65,7 @@ def docopt_cmd(func):
 class Allocation(cmd.Cmd):
     intro = 'Welcome to Office space Allocation!' \
         + ' (type help for a list of commands.)'
-    print(__doc__)
+    cprint(__doc__, "green")
     prompt = '>> '
 
     funt = Dojo()
@@ -107,12 +116,12 @@ class Allocation(cmd.Cmd):
 
     def do_exit(self, arg):
         """Usage: exit"""
-        print ("Bye..")
+        cprint ("Bye..", "yellow")
         exit()
 
 if __name__ == '__main__':
     try:
         Allocation().cmdloop()
     except KeyboardInterrupt:
-        print("\nApplication stopped")
+        cprint("\nApplication stopped", "yellow")
         exit()
