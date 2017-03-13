@@ -131,9 +131,9 @@ class TestPrintAllocatedUnallocated(unittest.TestCase):
         self.dojo.add_person('Dennis', 'Person5', 'Fellow' , 'Y')
 
     def test_prints_allocated_successfully(self):
-        allocated = self.dojo.print_allocations()
-        self.assertIn('Dennis Person5', allocated)
+        allocated = self.dojo.print_allocations("")
+        self.assertIn('Dennis Person4', allocated)
 
     def test_prints_unallocated_successfully(self):
-        unallocated = self.dojo.print_unallocated()
-        self.assertIn("Dennis Person7", unallocated)
+        unallocated = self.dojo.print_unallocated("")
+        self.assertIn("Dennis Person5", unallocated)
