@@ -105,7 +105,7 @@ class TestPrintingRoom(unittest.TestCase):
     def test_print_room_that_does_not_exist(self):
         """ Should not print a room that is not in the system """
         self.assertEqual(self.dojo.print_room('Entebbe'), \
-        "Room name Entebbe doesn't exist")
+        "Room Entebbe doesn't exist")
 
     def test_prints_room_occupants(self):
         """ Should print all the occupants of a specified room """
@@ -137,3 +137,69 @@ class TestPrintAllocatedUnallocated(unittest.TestCase):
     def test_prints_unallocated_successfully(self):
         unallocated = self.dojo.print_unallocated("")
         self.assertIn("Dennis Person5", unallocated)
+
+class TestReallocatePerson(unittest.TestCase):
+    def setUp(self):
+        self.dojo = Dojo()
+
+    def test_rejects_inavalid_id(self):
+        """ Should reject an invalid ID """
+        self.dojo.create_room("Office", "Django")
+        self.dojo.create_room("Office", "Flask")
+        self.dojo.add_person("mwangi", "james", "fellow")
+        james_reallocate = self.dojo.reallocate_person(2, "Flask")
+        self.assertEqual(james_reallocate, "Invalid ID")
+
+    def test_rejects_reallocation_to_non_existent_room(self):
+        """ Should not reallocate to room that doesn't exist """
+        self.dojo.create_room("office", "PHP")
+        self.dojo.add_person("Ochieng", "Collins", "fellow")
+        collins_reallocate = self.dojo.reallocate_person(1, "Java")
+        self.assertEqual(collins_reallocate, "room Java doesn't exists")
+
+    def test_rejects_reallocation_to_same_room(self):
+        """ Should not reallocate to the same room """
+        self.dojo.create_room("office", "PHP")
+        self.dojo.add_person("Ochieng", "Collins", "fellow")
+        collins_reallocate = self.dojo.reallocate_person(1, "PHP")
+        self.assertEqual(collins_reallocate, "Can't reallocate to the same room")
+
+
+    def test_succesfully_reallocates_person(self):
+        """ Should reallocate either staff or fellow"""
+        self.dojo.create_room("office", "Django")
+        self.dojo.add_person("Maina", "wekesa", "fellow")
+        self.dojo.create_room("office", "Python")
+        self.assertEqual(self.dojo.reallocate_person(1, "Python"), \
+        "Maina wekesa has been reallocated to python office")
+
+    def test_reallocating_to_full_room(self):
+        """ Should not accept rellocating to a full room """
+        self.dojo.create_room("living", "Arusha")
+        self.dojo.add_person("maina", "oscar", "fellow", "Y")
+        self.dojo.add_person("ouma", "antony", "fellow", "Y")
+        self.dojo.add_person("maasai", "ken", "fellow", "Y")
+        self.dojo.add_person("arogo", "robert", "fellow", "Y")
+        self.dojo.create_room("living", "Entebbe")
+        self.dojo.add_person("kioko", "samuel", "fellow", "Y")
+        kioko_reallocate = self.dojo.reallocate_person(5, "Arusha")
+        self.assertEqual(kioko_reallocate, "Sorry! Arusha is full")
+
+    def test_reallocating_of_staff_to_livingspace(self):
+        """ Should reject relocating staff to a living room """
+        self.dojo.create_room("office", "Java")
+        self.dojo.add_person("mary", "muriga","staff")
+        self.dojo.create_room("living", "kilimanjaro")
+        self.assertEqual(self.dojo.reallocate_person(1, "kilimanjaro"), \
+        "Can't rellocate staff to a living room")
+class TestLoadPeople(unittest.TestCase):
+    def setUp(self):
+        self.dojo = Dojo()
+
+    def test_load_people(self):
+        """ Test loading people from a text file. """
+        self.dojo.load_people("yuti.txt")
+        self.assertTrue(os.path.isfile("yuti.txt"))
+        self.assertEqual(len(self.dojo.all_people), 7)
+        self.assertEqual(len(self.dojo.staffs), 3)
+        self.assertEqual(len(self.dojo.fellows), 4)
