@@ -191,7 +191,7 @@ class TestReallocatePerson(unittest.TestCase):
         self.dojo.create_room("living", ["Entebbe"])
         self.dojo.add_person("kioko", "samuel", "fellow", "Y")
         kioko_reallocate = self.dojo.reallocate_person(5, "Arusha")
-        self.assertEqual(kioko_reallocate, "Sorry! Arusha is full")
+        self.assertEqual(kioko_reallocate, "Sorry, room Arusha is full")
 
     def test_reallocating_of_staff_to_livingspace(self):
         """ Should reject relocating staff to a living room """
