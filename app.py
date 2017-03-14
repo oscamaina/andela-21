@@ -5,6 +5,9 @@ interactive command application.
 Usage:
     app.py create_room <room_type> <room_name>...
     app.py add_person <first_name> <second_name> <category> [<accommodation>]
+    app.py print_room <room_name>
+    app.py print_allocations [--o=filename]
+    app.py print_unallocated [--o=filename]
     app.py exit
     app.py (-i | --interactive)
     app.py (-h | --help)
@@ -86,6 +89,31 @@ class Allocation(cmd.Cmd):
             print(self.funt.add_person(fname, lname, category, accomodate))
         else:
             print(self.funt.add_person(fname, lname, category))
+
+    @docopt_cmd
+    def do_print_room(self, arg):
+        """
+        Usage: print_room <room_name>
+        """
+        room_name = arg['<room_name>']
+        print(self.funt.print_room(room_name))
+
+    @docopt_cmd
+    def do_print_allocations(self, arg):
+        """
+        Usage: print_allocations [--o=filename]
+        """
+        option = arg["--o"]
+        print(self.funt.print_allocations(option))
+
+    @docopt_cmd
+    def do_print_unallocated(self, arg):
+        """
+        Usage: print_unallocated [--o=filename]
+        """
+        option = arg["--o"]
+        print(self.funt.print_unallocated(option))
+
     def do_exit(self, arg):
         """Usage: exit"""
         cprint ("Bye..", "yellow")
