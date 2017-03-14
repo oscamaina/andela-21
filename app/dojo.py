@@ -240,7 +240,7 @@ class Dojo():
 			return "Can't reallocate to the same room"
 			#checks if room to rellocate to has space
 		if len(new_room[0].occupants) == new_room[0].max_capacity:
-			return "Sorry! " + new_room[0].room_name.capitalize() + " is full"
+			return "Sorry, room " + new_room[0].room_name.capitalize() + " is full"
 		else:
 			new_room[0].occupants.append(person_reallocate[0])
 			previous_room[0].occupants.remove(person_reallocate[0])
