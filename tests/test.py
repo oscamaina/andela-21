@@ -131,12 +131,26 @@ class TestPrintAllocatedUnallocated(unittest.TestCase):
         self.dojo.add_person('Dennis', 'Person5', 'Fellow' , 'Y')
 
     def test_prints_allocated_successfully(self):
-        allocated = self.dojo.print_allocations("")
-        self.assertIn('Dennis Person4', allocated)
+        allocated = self.dojo.print_allocations()
+        self.assertIn('DENNIS PERSON4', allocated)
 
     def test_prints_unallocated_successfully(self):
-        unallocated = self.dojo.print_unallocated("")
+        unallocated = self.dojo.print_unallocated()
         self.assertIn("Dennis Person5", unallocated)
+
+    def test_print_allocations_with_file_specified(self):
+        self.dojo.create_room("office", ["Django"])
+        self.dojo.create_room("living", ["Flask"])
+        self.dojo.add_person("Maina", "oscar","fellow", "Y")
+        self.dojo.add_person("Otieno","Ian","staff")
+        allocate = self.dojo.print_allocations("t_file")
+        self.assertEqual(allocate, "Data saved in t_file.txt")
+
+    def test_print_unallocated_with_file_specified(self):
+        self.dojo.add_person("Maina", "oscar","fellow", "Y")
+        self.dojo.add_person("Otieno","Ian","staff")
+        unallocate = self.dojo.print_unallocated("t_file")
+        self.assertEqual(unallocate, "Data saved in t_file.txt")
 
 class TestReallocatePerson(unittest.TestCase):
     """ Unit tests for reallocating persons """
