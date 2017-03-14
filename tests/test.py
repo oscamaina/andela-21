@@ -145,52 +145,59 @@ class TestReallocatePerson(unittest.TestCase):
 
     def test_rejects_inavalid_id(self):
         """ Should reject an invalid ID """
-        self.dojo.create_room("Office", "Django")
-        self.dojo.create_room("Office", "Flask")
+        self.dojo.create_room("Office", ["Django"])
+        self.dojo.create_room("Office", ["Flask"])
         self.dojo.add_person("mwangi", "james", "fellow")
-        james_reallocate = self.dojo.reallocate_person(2, "Flask")
-        self.assertEqual(james_reallocate, "Invalid ID")
+        F_reallocate = self.dojo.reallocate_person("F", "Flask")
+        self.assertEqual(F_reallocate, "Invalid ID")
+
+    def test_rejects_non_existent_id(self):
+        """ Should reject an Id that isn't in system """
+        self.dojo.create_room("Office", ["Django"])
+        self.dojo.create_room("Office", ["Flask"])
+        self.dojo.add_person("mwangi", "james", "fellow")
+        james_reallocate = self.dojo.reallocate_person(3, "Flask")
+        self.assertEqual(james_reallocate, "The person with id 3 doesn't exist")
 
     def test_rejects_reallocation_to_non_existent_room(self):
         """ Should not reallocate to room that doesn't exist """
-        self.dojo.create_room("office", "PHP")
+        self.dojo.create_room("office", ["PHP"])
         self.dojo.add_person("Ochieng", "Collins", "fellow")
         collins_reallocate = self.dojo.reallocate_person(1, "Java")
         self.assertEqual(collins_reallocate, "room Java doesn't exists")
 
     def test_rejects_reallocation_to_same_room(self):
         """ Should not reallocate to the same room """
-        self.dojo.create_room("office", "PHP")
+        self.dojo.create_room("office", ["PHP"])
         self.dojo.add_person("Ochieng", "Collins", "fellow")
         collins_reallocate = self.dojo.reallocate_person(1, "PHP")
         self.assertEqual(collins_reallocate, "Can't reallocate to the same room")
 
-
     def test_succesfully_reallocates_person(self):
         """ Should reallocate either staff or fellow"""
-        self.dojo.create_room("office", "Django")
+        self.dojo.create_room("office", ["Django"])
         self.dojo.add_person("Maina", "wekesa", "fellow")
-        self.dojo.create_room("office", "Python")
+        self.dojo.create_room("office", ["Python"])
         self.assertEqual(self.dojo.reallocate_person(1, "Python"), \
-        "Maina wekesa has been reallocated to python office")
+        "Maina wekesa reallocated to Python")
 
     def test_reallocating_to_full_room(self):
         """ Should not accept rellocating to a full room """
-        self.dojo.create_room("living", "Arusha")
+        self.dojo.create_room("living", ["Arusha"])
         self.dojo.add_person("maina", "oscar", "fellow", "Y")
         self.dojo.add_person("ouma", "antony", "fellow", "Y")
         self.dojo.add_person("maasai", "ken", "fellow", "Y")
         self.dojo.add_person("arogo", "robert", "fellow", "Y")
-        self.dojo.create_room("living", "Entebbe")
+        self.dojo.create_room("living", ["Entebbe"])
         self.dojo.add_person("kioko", "samuel", "fellow", "Y")
         kioko_reallocate = self.dojo.reallocate_person(5, "Arusha")
         self.assertEqual(kioko_reallocate, "Sorry! Arusha is full")
 
     def test_reallocating_of_staff_to_livingspace(self):
         """ Should reject relocating staff to a living room """
-        self.dojo.create_room("office", "Java")
+        self.dojo.create_room("office", ["Java"])
         self.dojo.add_person("mary", "muriga","staff")
-        self.dojo.create_room("living", "kilimanjaro")
+        self.dojo.create_room("living", ["kilimanjaro"])
         self.assertEqual(self.dojo.reallocate_person(1, "kilimanjaro"), \
         "Can't rellocate staff to a living room")
 
@@ -198,6 +205,14 @@ class TestLoadPeople(unittest.TestCase):
     """ Unit tests for loading people """
     def setUp(self):
         self.dojo = Dojo()
+
+    def test_load_non_existing_file(self):
+        load_non = self.dojo.load_people("files/load.txt")
+        self.assertEqual(load_non, "File files/load.txt doesn't exist")
+
+    def test_load_an_empty_file(self):
+        load_empty = self.dojo.load_people("files/empty.txt")
+        self.assertEqual(load_empty, "File files/empty.txt is empty")
 
     def test_load_people(self):
         """ Test loading people from a text file. """
