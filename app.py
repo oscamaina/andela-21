@@ -5,11 +5,6 @@ interactive command application.
 Usage:
     app.py create_room <room_type> <room_name>...
     app.py add_person <first_name> <second_name> <category> [<accommodation>]
-    app.py print_room <room_name>
-    app.py print_allocations [--o=filename]
-    app.py print_unallocated [--o=filename]
-    app.py reallocate_person <person_identifier> <new_room_name>
-    app.py load_people <file_name>
     app.py exit
     app.py (-i | --interactive)
     app.py (-h | --help)
@@ -20,6 +15,7 @@ Options:
 """
 
 import cmd
+
 from docopt import docopt, DocoptExit
 from app.dojo import Dojo
 from colorama import init
@@ -90,45 +86,6 @@ class Allocation(cmd.Cmd):
             print(self.funt.add_person(fname, lname, category, accomodate))
         else:
             print(self.funt.add_person(fname, lname, category))
-
-    @docopt_cmd
-    def do_print_room(self, arg):
-        """
-        Usage: print_room <room_name>
-        """
-        room_name = arg['<room_name>']
-        print(self.funt.print_room(room_name))
-
-    @docopt_cmd
-    def do_print_allocations(self, arg):
-        """
-        Usage: print_allocations [--o=filename]
-        """
-        option = arg["--o"]
-        print(self.funt.print_allocations(option))
-
-    @docopt_cmd
-    def do_print_unallocated(self, arg):
-        """
-        Usage: print_unallocated [--o=filename]
-        """
-        option = arg["--o"]
-        print(self.funt.print_unallocated(option))
-
-    @docopt_cmd
-    def do_reallocate_person(self, arg):
-        """Usage: reallocate_person <person_identifier> <new_room_name>"""
-        p_id = arg["<person_identifier>"]
-        new_room = arg["<new_room_name>"]
-        print(self.funt.reallocate_person(int(p_id), new_room))
-
-    @docopt_cmd
-    def do_load_people(self, arg):
-        """Usage: load_people <file_name>"""
-        f_name = arg["<file_name>"]
-        print(self.funt.load_people(f_name))
-
-
     def do_exit(self, arg):
         """Usage: exit"""
         cprint ("Bye..", "yellow")
