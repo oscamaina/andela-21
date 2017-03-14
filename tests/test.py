@@ -139,6 +139,7 @@ class TestPrintAllocatedUnallocated(unittest.TestCase):
         self.assertIn("Dennis Person5", unallocated)
 
 class TestReallocatePerson(unittest.TestCase):
+    """ Unit tests for reallocating persons """
     def setUp(self):
         self.dojo = Dojo()
 
@@ -192,14 +193,16 @@ class TestReallocatePerson(unittest.TestCase):
         self.dojo.create_room("living", "kilimanjaro")
         self.assertEqual(self.dojo.reallocate_person(1, "kilimanjaro"), \
         "Can't rellocate staff to a living room")
+
 class TestLoadPeople(unittest.TestCase):
+    """ Unit tests for loading people """
     def setUp(self):
         self.dojo = Dojo()
 
     def test_load_people(self):
         """ Test loading people from a text file. """
-        self.dojo.load_people("yuti.txt")
-        self.assertTrue(os.path.isfile("yuti.txt"))
+        self.dojo.load_people("files/yuti.txt")
+        self.assertTrue(os.path.isfile("files/yuti.txt"))
         self.assertEqual(len(self.dojo.all_people), 7)
         self.assertEqual(len(self.dojo.staffs), 3)
         self.assertEqual(len(self.dojo.fellows), 4)
