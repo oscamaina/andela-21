@@ -117,3 +117,83 @@ class Dojo():
 			 + " Living space"
 		else:
 			return "No living rooms with space available"
+	def print_room(self, room_name):
+		""" Returns all occupants of a specific room """
+		found = False
+		current_occupants = ""
+		for room in self.all_rooms:
+			if room.room_name == room_name.lower():
+				found = True
+			if found:
+				if len(room.occupants) > 0:
+					for occupant in room.occupants:
+						current_occupants += ("{} {},".format\
+						(occupant.first_name, occupant.last_name))
+					return current_occupants
+				else:
+					return room_name + " has no occupants"
+		else:
+			return "Room " + room_name + " doesn't exist"
+
+	def print_allocations(self, filename):
+		""" Returns rooms occupied with there current occupants """
+		output = ""
+		#filters all_rooms to return room with occupants
+		room_with_occupants = [room for room in self.all_rooms\
+		if len(room.occupants) > 0]
+
+		if len(room_with_occupants) > 0:
+			for room in room_with_occupants:
+				output += ("\n ROOM {} {}".format\
+				(room.room_name.upper(), room.room_type.upper()))
+				output += ("\n" + "-"*50 + "\n")
+				for occupant in room.occupants:
+					output += (" {} {} {},".format\
+					(occupant.first_name.upper(), \
+					occupant.last_name.upper(), occupant.category) + " ")
+
+			if filename is None:
+				return output
+			else:
+				txt_file = open(filename + ".txt", "w")
+				txt_file.write(output)
+				txt_file.close()
+				return("Data saved in {}.txt \n".format(filename) )
+		return "No allocations availabe"
+
+	def print_unallocated(self, filename):
+		""" Returns all persons yet to be allocated rooms """
+		output = ''
+		if len(self.waiting_to_allocate_office) > 0:
+			output += "\nPersons yet to be allocated office space\n" + "-"*40
+			output += ("\nNAME" + " "*10 + "CATEGORY" + " "*5 + "ACCOMODATION")
+			for person in self.waiting_to_allocate_office:
+				if isinstance(person, Fellow):
+					output += ("\n{} {}     {}      {}".\
+					format(person.first_name, person.last_name, \
+					person.category, person.accomodation))
+
+				elif isinstance(person, Staff):
+					output += ("\n{} {}      {}".format\
+					(person.first_name, person.last_name, person.category))
+		else:
+			output += "\n There are no unallocated persons in office \n"
+
+		if len(self.waiting_to_allocate_living) > 0:
+			output += "\nPersons yet to be allocated living rooms\n" + "-"*40
+			output += ("\nNAME" + " "*10 + "CATEGORY" + " "*5 + "ACCOMODATION")
+			for person in self.waiting_to_allocate_living:
+				output += ("\n{} {}     {}      {}".\
+				format(person.first_name, person.last_name, \
+				person.category, person.accomodation))
+		else:
+			output += "\n There are no unallocated persons in living"
+
+		if filename is None:
+			return(output)
+
+		else:
+			txt_file = open(filename + ".txt", "w")
+			txt_file.write(output)
+			txt_file.close()
+			return("Data saved in {}.txt \n".format(filename) )
