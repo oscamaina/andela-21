@@ -95,3 +95,44 @@ class TestAddingPersons(unittest.TestCase):
         self.dojo.add_person("Kipyegon", "Ken", "staff")
         self.assertIsInstance(self.dojo.fellows[0], Fellow)
         self.assertIsInstance(self.dojo.staffs[0], Staff)
+class TestPrintingRoom(unittest.TestCase):
+    """ Test cases for printing Room and its occupants """
+    def setUp(self):
+        self.dojo = Dojo()
+        self.dojo.create_room("office", ["Django"])
+
+    def test_print_room_that_does_not_exist(self):
+        """ Should not print a room that is not in the system """
+        self.assertEqual(self.dojo.print_room('Entebbe'), \
+        "Room Entebbe doesn't exist")
+
+    def test_prints_room_occupants(self):
+        """ Should print all the occupants of a specified room """
+        self.dojo.add_person('Dennis', 'Wachiuri', 'Fellow')
+        self.assertIn("Dennis Wachiuri", self.dojo.print_room('Django'))
+
+    def test_prints_empty_for_unoccupied_room(self):
+        """ Prints null if specified room is empty """
+        self.assertEqual(self.dojo.print_room('Django'), "Django has no occupants")
+
+class TestPrintAllocatedUnallocated(unittest.TestCase):
+    """ Test case for printing allocations """
+    def setUp(self):
+        self.dojo = Dojo()
+        self.dojo.create_room("living", ["Django"])
+        # person 1 to 4 should be allocated to living Room Django
+        self.dojo.add_person('Dennis', 'Person1', 'Fellow' , 'Y')
+        self.dojo.add_person('Dennis', 'Person2', 'Fellow' , 'Y')
+        self.dojo.add_person('Dennis', 'Person3', 'Fellow' , 'Y')
+        self.dojo.add_person('Dennis', 'Person4', 'Fellow' , 'Y')
+
+        # person 5 should be unallocated
+        self.dojo.add_person('Dennis', 'Person5', 'Fellow' , 'Y')
+
+    def test_prints_allocated_successfully(self):
+        allocated = self.dojo.print_allocations("")
+        self.assertIn('Dennis Person4', allocated)
+
+    def test_prints_unallocated_successfully(self):
+        unallocated = self.dojo.print_unallocated("")
+        self.assertIn("Dennis Person5", unallocated)
