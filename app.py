@@ -8,6 +8,8 @@ Usage:
     app.py print_room <room_name>
     app.py print_allocations [--o=filename]
     app.py print_unallocated [--o=filename]
+    app.py reallocate_person <person_identifier> <new_room_name>
+    app.py load_people <file_name>
     app.py exit
     app.py (-i | --interactive)
     app.py (-h | --help)
@@ -112,6 +114,19 @@ class Allocation(cmd.Cmd):
         """
         option = arg["--o"]
         print(self.funt.print_unallocated(option))
+
+    @docopt_cmd
+    def do_reallocate_person(self, arg):
+        """Usage: reallocate_person <person_identifier> <new_room_name>"""
+        p_id = arg["<person_identifier>"]
+        new_room = arg["<new_room_name>"]
+        print(self.funt.reallocate_person(int(p_id), new_room))
+
+    @docopt_cmd
+    def do_load_people(self, arg):
+        """Usage: load_people <file_name>"""
+        f_name = arg["<file_name>"]
+        print(self.funt.load_people(f_name))
 
 
     def do_exit(self, arg):
