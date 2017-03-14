@@ -1,3 +1,4 @@
+import os
 from random import choice
 
 from app.rooms import Room, Office, LivingSpace
@@ -133,12 +134,11 @@ class Dojo():
 				else:
 					return room_name + " has no occupants"
 		else:
-			return "Room name " + room_name + " doesn't exist"
+			return "Room " + room_name + " doesn't exist"
 
 	def print_allocations(self, filename):
 		""" Returns rooms occupied with there current occupants """
 		output = ""
-		members = ""
 		#filters all_rooms to return room with occupants
 		room_with_occupants = [room for room in self.all_rooms\
 		if len(room.occupants) > 0]
@@ -149,10 +149,9 @@ class Dojo():
 				(room.room_name.upper(), room.room_type.upper()))
 				output += ("\n" + "-"*50 + "\n")
 				for occupant in room.occupants:
-					members += (" {} {} {},".format\
+					output += (" {} {} {},".format\
 					(occupant.first_name.upper(), \
 					occupant.last_name.upper(), occupant.category) + " ")
-				output += members
 
 			if filename is None:
 				return output
@@ -199,3 +198,62 @@ class Dojo():
 			txt_file.write(output)
 			txt_file.close()
 			return("Data saved in {}.txt \n".format(filename) )
+
+	def reallocate_person(self, personID, roomname):
+		""" Reallocatesa person to a different room """
+		#returns rooms with occupants
+		room_with_occupants = [room for room in self.all_rooms\
+		if len(room.occupants) > 0]
+
+		person_reallocate = [person for person \
+		in self.all_people if person.id == personID]
+		#checks if person is in allocated a room
+		previous_room = [room for room in room_with_occupants\
+		 for person in room.occupants if person.id == personID]
+		#checks if room to rellocate to exists
+		new_room = [room for room in self.all_rooms \
+		if room.room_name.lower() == roomname.lower()]
+		if new_room:
+			#checks if previous room type matches with new room type
+			roomtypes = [oldroom for oldroom in \
+			previous_room if oldroom.room_type == new_room[0].room_type]
+
+		if not person_reallocate:
+			return "Invalid ID"
+		if not previous_room:
+			return "person yet to be allocated a room"
+		if not new_room:
+			return "room " + roomname + " doesn't exists"
+		if previous_room[0].room_name.lower() == new_room[0].room_name.lower():
+			return "Can't reallocate to the same room"
+		if person_reallocate[0].category == "staff" \
+		and new_room[0].room_type == "living":
+			return "Can't rellocate staff to a living room"
+		if not roomtypes:
+			return "can't rellocate to a room of different type"
+			#checks if room to rellocate to has space
+		if len(new_room[0].occupants) == new_room[0].max_capacity:
+			return "Sorry! room" + new_room[0].room_name + " is full"
+		else:
+			new_room[0].occupants.append(person_reallocate[0])
+			previous_room[0].occupants.remove(person_reallocate[0])
+			return "reallocated successfully"
+
+	def load_people(self, filename):
+		""" Loads people from a file to system """
+		if not os.path.isfile(filename):
+			return "File {} doesn't exist".format(filename)
+		text_file = open(filename)
+		for line in text_file:
+			person_details = line.rstrip().split()
+			if len(person_details) == 4 and person_details[2] \
+			in ("FELLOW", "STAFF") and person_details[3] in ("Y", "N"):
+				self.add_person(person_details[0], person_details[1], \
+				person_details[2], person_details[3])
+			elif len(person_details) == 3 and person_details[2] in \
+			("FELLOW", "STAFF"):
+				self.add_person(person_details[0], \
+				person_details[1], person_details[2])
+			else:
+			  return "Incorrect data format \n{0}".format(line)
+		return "Persons added successfully"
