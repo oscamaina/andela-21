@@ -136,7 +136,7 @@ class Dojo():
 		else:
 			return "Room " + room_name + " doesn't exist"
 
-	def print_allocations(self, filename):
+	def print_allocations(self, filename=None):
 		""" Returns rooms occupied with there current occupants """
 		output = ""
 		#filters all_rooms to return room with occupants
@@ -159,10 +159,10 @@ class Dojo():
 				txt_file = open(filename + ".txt", "w")
 				txt_file.write(output)
 				txt_file.close()
-				return("Data saved in {}.txt \n".format(filename) )
+				return("Data saved in {}.txt".format(filename) )
 		return "No allocations availabe"
 
-	def print_unallocated(self, filename):
+	def print_unallocated(self, filename=None):
 		""" Returns all persons yet to be allocated rooms """
 		output = ''
 		if len(self.waiting_to_allocate_office) > 0:
@@ -197,7 +197,7 @@ class Dojo():
 			txt_file = open(filename + ".txt", "w")
 			txt_file.write(output)
 			txt_file.close()
-			return("Data saved in {}.txt \n".format(filename) )
+			return("Data saved in {}.txt".format(filename) )
 
 	def reallocate_person(self, personID, roomname):
 		""" Reallocates person to a different room """
