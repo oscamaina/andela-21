@@ -8,13 +8,13 @@ class Room(object):
 class Office(Room):
 	""" Office class inheriting from room class"""
 	def __init__(self, room_name):
-		super().__init__(room_name)
+		super(Office, self).__init__(room_name)
 		self.room_type = 'office'
 		self.max_capacity = 6
 
 class LivingSpace(Room):
 	""" LivingSpace class inheriting from room class"""
 	def __init__(self, room_name):
-		super().__init__(room_name)
+		super(LivingSpace, self).__init__(room_name)
 		self.room_type = 'living'
 		self.max_capacity = 4
