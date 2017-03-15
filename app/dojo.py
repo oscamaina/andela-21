@@ -117,6 +117,7 @@ class Dojo():
 			 + " Living space"
 		else:
 			return "No living rooms with space available"
+
 	def print_room(self, room_name):
 		""" Returns all occupants of a specific room """
 		found = False
@@ -135,7 +136,7 @@ class Dojo():
 		else:
 			return "Room " + room_name + " doesn't exist"
 
-	def print_allocations(self, filename):
+	def print_allocations(self, filename=None):
 		""" Returns rooms occupied with there current occupants """
 		output = ""
 		#filters all_rooms to return room with occupants
@@ -158,10 +159,10 @@ class Dojo():
 				txt_file = open(filename + ".txt", "w")
 				txt_file.write(output)
 				txt_file.close()
-				return("Data saved in {}.txt \n".format(filename) )
+				return("Data saved in {}.txt".format(filename) )
 		return "No allocations availabe"
 
-	def print_unallocated(self, filename):
+	def print_unallocated(self, filename=None):
 		""" Returns all persons yet to be allocated rooms """
 		output = ''
 		if len(self.waiting_to_allocate_office) > 0:
@@ -196,4 +197,74 @@ class Dojo():
 			txt_file = open(filename + ".txt", "w")
 			txt_file.write(output)
 			txt_file.close()
-			return("Data saved in {}.txt \n".format(filename) )
+			return("Data saved in {}.txt".format(filename) )
+
+	def reallocate_person(self, personID, roomname):
+		""" Reallocates person to a different room """
+		#returns rooms with occupants
+		room_with_occupants = [room for room in self.all_rooms\
+		if len(room.occupants) > 0]
+
+		person_identifier = personID
+		if not isinstance(person_identifier, int):
+			return "Invalid ID"
+
+		person_reallocate = [person for person \
+		in self.all_people if person.id == personID]
+
+		if not person_reallocate:
+			return "The person with id " + str(personID) + " doesn't exist"
+		#checks if person is in allocated a room
+		previous_room = [room for room in room_with_occupants\
+		 for person in room.occupants if person.id == personID]
+
+		if not previous_room:
+			return "person yet to be allocated a room"
+
+		#checks if room to rellocate to exists
+		new_room = [room for room in self.all_rooms \
+		if room.room_name.lower() == roomname.lower()]
+
+		if not new_room:
+			return "room " + roomname + " doesn't exists"
+		if new_room:
+			#checks if previous room type matches with new room type
+			roomtypes = [oldroom for oldroom in \
+			previous_room if oldroom.room_type == new_room[0].room_type]
+		if person_reallocate[0].category == "staff" \
+		and new_room[0].room_type == "living":
+			return "Can't rellocate staff to a living room"
+		if not roomtypes:
+			return "can't rellocate to a room of different type"
+		if previous_room[0].room_name.lower() == new_room[0].room_name.lower():
+			return "Can't reallocate to the same room"
+			#checks if room to rellocate to has space
+		if len(new_room[0].occupants) == new_room[0].max_capacity:
+			return "Sorry, room " + new_room[0].room_name.capitalize() + " is full"
+		else:
+			new_room[0].occupants.append(person_reallocate[0])
+			previous_room[0].occupants.remove(person_reallocate[0])
+			return person_reallocate[0].first_name + " " + \
+			person_reallocate[0].last_name + " " + "reallocated to " + roomname
+
+	def load_people(self, filename):
+		""" Loads people from a file to system """
+		response = ""
+		if not os.path.isfile(filename):
+			return "File {} doesn't exist".format(filename)
+		text_file = open(filename)
+		if os.path.getsize(filename) == 0:
+			response += "File {} is empty".format(filename)
+		for line in text_file:
+			person_details = line.rstrip().split()
+			if len(person_details) == 4 and person_details[2] \
+			in ("FELLOW", "STAFF") and person_details[3] in ("Y", "N"):
+				response += str(self.add_person(person_details[0], person_details[1], \
+				person_details[2], person_details[3])) + "\n\n"
+			elif len(person_details) == 3 and person_details[2] in \
+			("FELLOW", "STAFF"):
+				response += str(self.add_person(person_details[0], \
+				person_details[1], person_details[2])) + "\n\n"
+			else:
+				response += "Incorrect data format for -- {0}".format(line)
+		return response
