@@ -254,7 +254,7 @@ class Dojo():
 			return "File {} doesn't exist".format(filename)
 		text_file = open(filename)
 		if os.path.getsize(filename) == 0:
-			return "File {} is empty".format(filename)
+			response += "File {} is empty".format(filename)
 		for line in text_file:
 			person_details = line.rstrip().split()
 			if len(person_details) == 4 and person_details[2] \
@@ -266,5 +266,5 @@ class Dojo():
 				response += str(self.add_person(person_details[0], \
 				person_details[1], person_details[2])) + "\n\n"
 			else:
-			  return "Incorrect data format \n{0}".format(line)
+				response += "Incorrect data format for -- {0}".format(line)
 		return response
