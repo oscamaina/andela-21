@@ -249,6 +249,7 @@ class Dojo():
 
 	def load_people(self, filename):
 		""" Loads people from a file to system """
+		response = ""
 		if not os.path.isfile(filename):
 			return "File {} doesn't exist".format(filename)
 		text_file = open(filename)
@@ -258,12 +259,12 @@ class Dojo():
 			person_details = line.rstrip().split()
 			if len(person_details) == 4 and person_details[2] \
 			in ("FELLOW", "STAFF") and person_details[3] in ("Y", "N"):
-				self.add_person(person_details[0], person_details[1], \
-				person_details[2], person_details[3])
+				response += str(self.add_person(person_details[0], person_details[1], \
+				person_details[2], person_details[3])) + "\n\n"
 			elif len(person_details) == 3 and person_details[2] in \
 			("FELLOW", "STAFF"):
-				self.add_person(person_details[0], \
-				person_details[1], person_details[2])
+				response += str(self.add_person(person_details[0], \
+				person_details[1], person_details[2])) + "\n\n"
 			else:
 			  return "Incorrect data format \n{0}".format(line)
-		return "Persons added successfully"
+		return response
