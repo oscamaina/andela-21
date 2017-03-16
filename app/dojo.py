@@ -3,7 +3,11 @@ from random import choice
 
 from app.rooms import Room, Office, LivingSpace
 from app.person import Person, Fellow, Staff
+from app.db_models import RoomModel, PersonModel, base
 
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import select
 
 class Dojo():
 
@@ -268,3 +272,9 @@ class Dojo():
 			else:
 				response += "Incorrect data format for -- {0}".format(line)
 		return response
+
+	def save_state(self, dbname):
+		pass
+
+	def load_state(self, dbname):
+		pass
