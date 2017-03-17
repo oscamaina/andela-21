@@ -11,7 +11,7 @@ class RoomModel(base):
 	room_name = Column(String(50), unique=True, nullable=False)
 	room_type = Column(String(50), nullable=False)
 	max_capacity = Column(Integer(), nullable=False)
-	occupants = Column(Integer)
+	occupants = Column(String)
 
 
 class PersonModel(base):
@@ -21,5 +21,5 @@ class PersonModel(base):
 	name = Column(String(50), nullable=False)
 	category = Column (String(50), nullable=False)
 	office_allocated = Column(String, nullable=True)
-	wants_accommodation = Column(Boolean)
+	wants_accommodation = Column(String)
 	living_allocated = Column(String, nullable=True)
