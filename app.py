@@ -10,6 +10,7 @@ Usage:
     app.py print_unallocated [--o=filename]
     app.py reallocate_person <person_identifier> <new_room_name>
     app.py load_people <file_name>
+    app.py save_state [--o=db_name]
     app.py exit
     app.py (-i | --interactive)
     app.py (-h | --help)
@@ -127,6 +128,15 @@ class Allocation(cmd.Cmd):
         """Usage: load_people <file_name>"""
         f_name = arg["<file_name>"]
         print(self.funt.load_people(f_name))
+
+    @docopt_cmd
+    def do_save_state(self, arg):
+        """Usage: save_state [--db_name=sqlite_db] """
+        db = arg['--db_name']
+        if db:
+            print(self.funt.save_state(db))
+        else:
+            print(self.funt.save_state())
 
 
     def do_exit(self, arg):
