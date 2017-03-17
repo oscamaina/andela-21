@@ -110,7 +110,7 @@ class TestPrintingRoom(unittest.TestCase):
     def test_prints_room_occupants(self):
         """ Should print all the occupants of a specified room """
         self.dojo.add_person('Dennis', 'Wachiuri', 'Fellow')
-        self.assertIn("Dennis Wachiuri", self.dojo.print_room('Django'))
+        self.assertIn("DENNIS WACHIURI", self.dojo.print_room('Django'))
 
     def test_prints_empty_for_unoccupied_room(self):
         """ Prints null if specified room is empty """
@@ -136,7 +136,7 @@ class TestPrintAllocatedUnallocated(unittest.TestCase):
 
     def test_prints_unallocated_successfully(self):
         unallocated = self.dojo.print_unallocated()
-        self.assertIn("Dennis Person5", unallocated)
+        self.assertIn("DENNIS PERSON5", unallocated)
 
     def test_print_allocations_with_file_specified(self):
         self.dojo.create_room("office", ["Django"])
@@ -193,7 +193,7 @@ class TestReallocatePerson(unittest.TestCase):
         self.dojo.add_person("Maina", "wekesa", "fellow")
         self.dojo.create_room("office", ["Python"])
         self.assertEqual(self.dojo.reallocate_person(1, "Python"), \
-        "Maina wekesa reallocated to Python")
+        "MAINA WEKESA reallocated to Python")
 
     def test_reallocating_to_full_room(self):
         """ Should not accept rellocating to a full room """

@@ -19,13 +19,15 @@ class TestDatabase(unittest.TestCase):
 
     def test_successfully_load_state(self):
         """ Test loading data from database to application """
+        #dojo instance should receive data saved in somedb.db
+        self.dojo.load_state("somedb.db")
+        self.assertEqual(len(self.dojo.all_rooms),2)
+        self.assertEqual(len(self.dojo.all_people),2)
+
+        #second_instance should have data saved
         self.second_instance.load_state("somedb.db")
         self.assertEqual(len(self.second_instance.all_rooms),2)
         self.assertEqual(len(self.second_instance.all_people),2)
-
-        self.dojo.load_state("somedb.db")
-        self.assertEqual(len(self.dojo.all_rooms),0)
-        self.assertEqual(len(self.dojo.all_people),0)
 
     def test_load_state_from_non_existing_database(self):
         """Tests for loading state from a database that doesn't exist"""
