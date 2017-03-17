@@ -53,19 +53,19 @@ class Dojo():
 	def add_person(self, first_name, last_name, category, accomodation="N"):
 		""" function to add a person """
 		if isinstance(first_name, str) and isinstance(last_name, str):
+			name = (first_name + " " + last_name).upper()
 			if category.lower() == "fellow":
-				person = Fellow(first_name, last_name, accomodation)
+				person = Fellow(name, accomodation)
 				person.id = int(len(self.all_people)+1)
 				self.fellows.append(person)
 				self.all_people.append(person)
 				self.waiting_to_allocate_office.append(person)
 				if accomodation.upper() == 'Y':
 					self.waiting_to_allocate_living.append(person)
-					return "Fellow " + person.first_name + " " + \
-					 person.last_name + " added successfully with id " \
+					return "Fellow " + person.name + " added successfully with id " \
 					 + str(person.id) + ", " + str(self.allocate_office(person)) \
 					 + " and " + str(self.allocate_living(person))
-				return "Fellow " + person.first_name + " " + person.last_name\
+				return "Fellow " + person.name\
 				 + " added successfully with id " + str(person.id) + " and " \
 				+ str(self.allocate_office(person))
 
@@ -73,13 +73,12 @@ class Dojo():
 				if accomodation.upper() == "Y":
 					return "Sorry! staff can't be accomodated"
 				else:
-					person = Staff(first_name, last_name)
+					person = Staff(name)
 					person.id = int(len(self.all_people)+1)
 					self.staffs.append(person)
 					self.all_people.append(person)
 					self.waiting_to_allocate_office.append(person)
-					return "Staff " + person.first_name + " " + \
-					person.last_name + " added successfully with id " \
+					return "Staff " + person.name + " added successfully with id " \
 					+ str(person.id) + " and " + str(self.allocate_office(person))
 			else:
 				return "Wrong category. Can only be fellow or staff"
@@ -94,10 +93,10 @@ class Dojo():
 		for office_allocate in self.offices:
 			if len(office_allocate.occupants) < office_allocate.max_capacity:
 				office_with_space.append(office_allocate)
-
 		if len(office_with_space) > 0:
 			random_office = choice(office_with_space)
-			random_office.occupants.append(person)
+			random_office.occupants.append(person.name)
+			person.office = random_office.room_name
 			self.waiting_to_allocate_office.remove(person)
 			return "allocated to " + random_office.room_name \
 				 + " Office space"
@@ -112,10 +111,10 @@ class Dojo():
 		for living_allocate in self.living_spaces:
 			if len(living_allocate.occupants) < living_allocate.max_capacity:
 				living_with_space.append(living_allocate)
-
 		if len(living_with_space) > 0:
 			random_living_space = choice(living_with_space)
-			random_living_space.occupants.append(person)
+			random_living_space.occupants.append(person.name)
+			person.living = random_living_space.room_name
 			self.waiting_to_allocate_living.remove(person)
 			return "allocated to " + random_living_space.room_name \
 			 + " Living space"
@@ -132,8 +131,7 @@ class Dojo():
 			if found:
 				if len(room.occupants) > 0:
 					for occupant in room.occupants:
-						current_occupants += ("{} {},".format\
-						(occupant.first_name, occupant.last_name))
+						current_occupants += "{}, ".format(occupant)
 					return current_occupants
 				else:
 					return room_name + " has no occupants"
@@ -153,9 +151,7 @@ class Dojo():
 				(room.room_name.upper(), room.room_type.upper()))
 				output += ("\n" + "-"*50 + "\n")
 				for occupant in room.occupants:
-					output += (" {} {} {},".format\
-					(occupant.first_name.upper(), \
-					occupant.last_name.upper(), occupant.category) + " ")
+					output += (" {} ,".format(occupant) + " ")
 
 			if filename is None:
 				return output
@@ -174,13 +170,12 @@ class Dojo():
 			output += ("\nNAME" + " "*10 + "CATEGORY" + " "*5 + "ACCOMODATION")
 			for person in self.waiting_to_allocate_office:
 				if isinstance(person, Fellow):
-					output += ("\n{} {}     {}      {}".\
-					format(person.first_name, person.last_name, \
-					person.category, person.accomodation))
+					output += ("\n{}     {}      {}".\
+					format(person.name, person.category, person.accomodation))
 
 				elif isinstance(person, Staff):
-					output += ("\n{} {}      {}".format\
-					(person.first_name, person.last_name, person.category))
+					output += ("\n{}      {}".format\
+					(person.name, person.category))
 		else:
 			output += "\n There are no unallocated persons in office \n"
 
@@ -188,9 +183,8 @@ class Dojo():
 			output += "\nPersons yet to be allocated living rooms\n" + "-"*40
 			output += ("\nNAME" + " "*10 + "CATEGORY" + " "*5 + "ACCOMODATION")
 			for person in self.waiting_to_allocate_living:
-				output += ("\n{} {}     {}      {}".\
-				format(person.first_name, person.last_name, \
-				person.category, person.accomodation))
+				output += ("\n{}     {}      {}".\
+				format(person.name, person.category, person.accomodation))
 		else:
 			output += "\n There are no unallocated persons in living"
 
@@ -206,8 +200,8 @@ class Dojo():
 	def reallocate_person(self, personID, roomname):
 		""" Reallocates person to a different room """
 		#returns rooms with occupants
-		room_with_occupants = [room for room in self.all_rooms\
-		if len(room.occupants) > 0]
+		room_with_occupants = [room for room in self.all_rooms \
+		if room.occupants]
 
 		person_identifier = personID
 		if not isinstance(person_identifier, int):
@@ -220,7 +214,7 @@ class Dojo():
 			return "The person with id " + str(personID) + " doesn't exist"
 		#checks if person is in allocated a room
 		previous_room = [room for room in room_with_occupants\
-		 for person in room.occupants if person.id == personID]
+		 for occupant in room.occupants if occupant.upper() == person_reallocate[0].name]
 
 		if not previous_room:
 			return "person yet to be allocated a room"
@@ -246,10 +240,9 @@ class Dojo():
 		if len(new_room[0].occupants) == new_room[0].max_capacity:
 			return "Sorry, room " + new_room[0].room_name.capitalize() + " is full"
 		else:
-			new_room[0].occupants.append(person_reallocate[0])
-			previous_room[0].occupants.remove(person_reallocate[0])
-			return person_reallocate[0].first_name + " " + \
-			person_reallocate[0].last_name + " " + "reallocated to " + roomname
+			new_room[0].occupants.append(person_reallocate[0].name)
+			previous_room[0].occupants.remove(person_reallocate[0].name)
+			return person_reallocate[0].name + " " + "reallocated to " + roomname
 
 	def load_people(self, filename):
 		""" Loads people from a file to system """
@@ -274,7 +267,39 @@ class Dojo():
 		return response
 
 	def save_state(self, dbname):
-		pass
+		"""persists application data to database"""
 
-	def load_state(self, dbname):
-		pass
+		engine = create_engine('sqlite:///database/{}.db'.format(dbname))
+		base.metadata.create_all(engine)
+		Session = sessionmaker(bind=engine)
+		session = Session()
+
+		for room in self.all_rooms:
+		    new_room = RoomModel(
+		        room_name=room.room_name, \
+		        room_type=room.room_type, \
+		        max_capacity=room.max_capacity, \
+				occupants = ",".join(room.occupants)
+		    )
+		    room_exists = session.query(RoomModel).filter\
+			(RoomModel.room_name == room.room_name).count()
+		    if not room_exists:
+		        session.add(new_room)
+		session.commit()
+
+		for person in self.all_people:
+			if person.category == 'staff':
+				accomodation = "N"
+			else:
+				accomodation = "Y" if person.accomodation.upper() == 'Y' else "N"
+
+			new_person = PersonModel(name = person.name, \
+			category = person.category, office_allocated = person.office,\
+			wants_accommodation = accomodation,\
+			living_allocated = person.living)
+			person_exists = session.query(PersonModel).filter\
+			(PersonModel.name == person.name).count()
+			if not person_exists:
+				session.add(new_person)
+		session.commit()
+		return "App data has been stored in {} database".format(dbname)
