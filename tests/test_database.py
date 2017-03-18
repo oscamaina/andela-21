@@ -14,18 +14,20 @@ class TestDatabase(unittest.TestCase):
 
     def test_successfully_saves_state(self):
         """ Test saves application state to Database. """
-        expected = self.second_instance.save_state("somedb.db")
-        self.assertEqual(expected,"App data has been stored in somedb.db database")
+        expected = self.second_instance.save_state("somedb")
+        self.assertEqual(expected,"App data has been stored in somedb database")
 
     def test_successfully_load_state(self):
         """ Test loading data from database to application """
         #dojo instance should receive data saved in somedb.db
-        self.dojo.load_state("somedb.db")
+        self.dojo.load_state("somedb")
         self.assertEqual(len(self.dojo.all_rooms),2)
         self.assertEqual(len(self.dojo.all_people),2)
 
         #second_instance should have data saved
-        self.second_instance.load_state("somedb.db")
+        self.second_instance.load_state("somedb")
+        print(len(self.second_instance.all_rooms))
+
         self.assertEqual(len(self.second_instance.all_rooms),2)
         self.assertEqual(len(self.second_instance.all_people),2)
 
