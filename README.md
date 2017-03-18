@@ -40,6 +40,8 @@ app.py print_allocations [--o=filename]
 app.py print_unallocated [--o=filename]
 app.py reallocate_person <person_identifier> <new_room_name>
 app.py load_people <file_name>
+app.py save_state [--db_name=dbname]
+app.py load_state <dbname>
 app.py exit
 app.py (-i | --interactive)
 app.py (-h | --help)
