@@ -1,12 +1,12 @@
 class Person(object):
     """ class person """
-    def __init__(self, name, category = 'none', id =0):
+    def __init__(self, name, category = 'none'):
         """ initializing person attributes """
         self.name = name
         self.category = category
         self.office = ""
         self.living = ""
-        self.id = id
+        self.person_id= ""
 
 class Fellow(Person):
     """ class fellow inheriting class person """
