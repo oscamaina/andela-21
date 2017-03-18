@@ -26,8 +26,6 @@ class TestDatabase(unittest.TestCase):
 
         #second_instance should have data saved
         self.second_instance.load_state("somedb")
-        print(len(self.second_instance.all_rooms))
-
         self.assertEqual(len(self.second_instance.all_rooms),2)
         self.assertEqual(len(self.second_instance.all_people),2)
 
