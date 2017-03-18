@@ -18,8 +18,9 @@ class PersonModel(base):
 
 	__tablename__ = 'persons'
 	id = Column(Integer, primary_key = True)
+	person_id = Column(Integer)
 	name = Column(String(50), nullable=False)
 	category = Column (String(50), nullable=False)
 	office_allocated = Column(String, nullable=True)
-	wants_accommodation = Column(String)
+	wants_accomodation = Column(String)
 	living_allocated = Column(String, nullable=True)
