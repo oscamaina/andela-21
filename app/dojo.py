@@ -132,7 +132,8 @@ class Dojo():
 			if found:
 				if len(room.occupants) > 0:
 					for occupant in room.occupants:
-						current_occupants += "{}, ".format(occupant)
+						current_occupants += " {},".format(occupant)
+					current_occupants = current_occupants[:-1]
 					return current_occupants
 				else:
 					return room_name + " has no occupants"
@@ -345,6 +346,7 @@ class Dojo():
 				staff.person_id = person.person_id
 				self.all_people.append(staff)
 				self.staffs.append(staff)
+
 			elif person.category == 'fellow':
 				fellow = Fellow(person.name, person.wants_accomodation)
 				fellow.office = person.office_allocated
@@ -356,6 +358,4 @@ class Dojo():
 					self.waiting_to_allocate_living.append(person)
 			if not person.office_allocated:
 				self.waiting_to_allocate_office.append(person)
-
-
 		return "successfully loaded"
