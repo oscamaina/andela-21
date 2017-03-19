@@ -12,7 +12,7 @@ Create and activate a virtual environment
 
 ```
 
-$ virtualenv env
+$ virtualenv venv
 $ cd venv/Scripts
 & activate
 & cd..
