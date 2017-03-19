@@ -213,17 +213,17 @@ class TestLoadPeople(unittest.TestCase):
         self.dojo = Dojo()
 
     def test_load_non_existing_file(self):
-        load_non = self.dojo.load_people("files/load.txt")
-        self.assertEqual(load_non, "File files/load.txt doesn't exist")
+        load_non = self.dojo.load_people("load.txt")
+        self.assertEqual(load_non, "File load.txt doesn't exist")
 
     def test_load_an_empty_file(self):
-        load_empty = self.dojo.load_people("files/empty.txt")
-        self.assertEqual(load_empty, "File files/empty.txt is empty")
+        load_empty = self.dojo.load_people("empty.txt")
+        self.assertEqual(load_empty, "File empty.txt is empty")
 
     def test_load_people(self):
         """ Test loading people from a text file. """
-        self.dojo.load_people("files/yuti.txt")
-        self.assertTrue(os.path.isfile("files/yuti.txt"))
+        self.dojo.load_people("andela.txt")
+        self.assertTrue(os.path.isfile("andela.txt"))
         self.assertEqual(len(self.dojo.all_people), 7)
         self.assertEqual(len(self.dojo.staffs), 3)
         self.assertEqual(len(self.dojo.fellows), 4)
