@@ -10,6 +10,8 @@ Usage:
     app.py print_unallocated [--o=filename]
     app.py reallocate_person <person_identifier> <new_room_name>
     app.py load_people <file_name>
+    app.py save_state [--db_name=dbname]
+    app.py load_state <dbname>
     app.py exit
     app.py (-i | --interactive)
     app.py (-h | --help)
@@ -120,7 +122,9 @@ class Allocation(cmd.Cmd):
         """Usage: reallocate_person <person_identifier> <new_room_name>"""
         p_id = arg["<person_identifier>"]
         new_room = arg["<new_room_name>"]
-        print(self.funt.reallocate_person(int(p_id), new_room))
+
+        print(self.funt.reallocate_person(p_id, new_room))
+
 
     @docopt_cmd
     def do_load_people(self, arg):
@@ -128,6 +132,20 @@ class Allocation(cmd.Cmd):
         f_name = arg["<file_name>"]
         print(self.funt.load_people(f_name))
 
+    @docopt_cmd
+    def do_save_state(self, arg):
+        """Usage: save_state [--db_name=sqlite_db] """
+        db = arg['--db_name']
+        if db:
+            print(self.funt.save_state(db))
+        else:
+            print(self.funt.save_state())
+
+    @docopt_cmd
+    def do_load_state(self, arg):
+        """Usage: load_state <dbname>"""
+        db = arg["<dbname>"]
+        print(self.funt.load_state(db))
 
     def do_exit(self, arg):
         """Usage: exit"""
