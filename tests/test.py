@@ -224,6 +224,6 @@ class TestLoadPeople(unittest.TestCase):
         """ Test loading people from a text file. """
         self.dojo.load_people("andela.txt")
         self.assertTrue(os.path.isfile("andela.txt"))
-        self.assertEqual(len(self.dojo.all_people), 7)
-        self.assertEqual(len(self.dojo.staffs), 3)
-        self.assertEqual(len(self.dojo.fellows), 4)
+        self.assertEqual(len(self.dojo.all_people), 10)
+        self.assertEqual(len(self.dojo.staffs), 4)
+        self.assertEqual(len(self.dojo.fellows), 6)
