@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/oscamaina/andela-21.svg?branch=master)](https://travis-ci.org/oscamaina/andela-21)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
+
 # Office space allocation
 
 Room allocation system for one of Andela Kenya’s facilities called The Dojo
