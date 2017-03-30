@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/oscamaina/andela-21.svg?branch=master)](https://travis-ci.org/oscamaina/andela-21)
+[![Build Status](https://travis-ci.org/oscamaina/andela-21.svg?branch=develop)](https://travis-ci.org/oscamaina/andela-21)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
 
 # Office space allocation
