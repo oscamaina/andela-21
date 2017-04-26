@@ -9,6 +9,8 @@ Usage:
     app.py print_allocations [--o=filename]
     app.py print_unallocated [--o=filename]
     app.py reallocate_person <person_identifier> <new_room_name>
+    app.py print_all_persons [--o=filename]
+    app.py print_all_rooms [--o=filename]
     app.py load_people <file_name>
     app.py save_state [--db_name=dbname]
     app.py load_state <dbname>
@@ -125,6 +127,17 @@ class Allocation(cmd.Cmd):
 
         print(self.funt.reallocate_person(p_id, new_room))
 
+    @docopt_cmd
+    def do_print_all_persons(self, arg):
+        """ Usage: print_all_persons [--o=filename] """
+        file_name = arg["--o"]
+        print(self.funt.print_all_persons(file_name))
+
+    @docopt_cmd
+    def do_print_all_rooms(self, arg):
+        """ Usage: print_all_rooms [--o=filename] """
+        file_name = arg["--o"]
+        print(self.funt.print_all_rooms(file_name))
 
     @docopt_cmd
     def do_load_people(self, arg):

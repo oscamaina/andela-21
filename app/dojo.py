@@ -250,6 +250,83 @@ class Dojo():
 				previous_room[1].occupants.remove(person_reallocate[0].name)
 			return person_reallocate[0].name + " " + "reallocated to " + roomname
 
+	def print_all_persons(self, file_name):
+		"""A method that prints all persons"""
+
+		output = ""
+
+		# check if there are any occupants in the system
+		if len(self.staffs + self.fellows) == 0:
+		    output += "\n No staff or fellow added yet"
+		else:
+		    output += ("\n" + "*"*50 + "\n")
+		    output += "FELLOW LIST\n"
+		    output += ("*"*50 + "\n")
+		    output += ("FELLOW ID     " + "   FELLOW NAME" + "\n")
+		    output += (("-")*50 + "\n")
+		    if len(self.fellows) == 0:
+		        output += "No added fellow yet!\n"
+		    else:
+		        for fellow in self.fellows:
+		            output += ("{}      -->    {}\n".format(fellow.person_id,
+		                                                    fellow.name))
+		    output += ("\n" + "*"*50 + "\n")
+		    output += "STAFF LIST\n"
+		    output += ("*"*50 + "\n")
+		    output += ("STAFF ID     " + "   STAFF NAME" + "\n")
+		    output += (("-")*50 + "\n")
+		    if len(self.staffs) == 0:
+		        output += "No added staff yet\n"
+		    else:
+		        for staff in self.staffs:
+		            output += ("{}     -->    {} \n".format(staff.person_id,
+		                                                    staff.name))
+
+		# check if the user has given a file name
+		if file_name is None:
+		    return(output)
+		else:
+		    save_to = open(file_name + ".txt", "w")
+		    save_to.write(output)
+		    save_to.close()
+		    return ("Data saved in {} successfully\n".format(file_name))
+
+	def print_all_rooms(self, file_name):
+		"""A method that prints all rooms"""
+		output = ""
+
+		# check if there are any occupants in the system
+		if len(self.offices + self.living_spaces) == 0:
+			output += "\n No offices or living_spaces added yet"
+		else:
+			output += ("\n" + "*"*50 + "\n")
+			output += "OFFICES LIST\n"
+			output += ("*"*50 + "\n")
+			if len(self.offices) == 0:
+				output += "No availabe offices!\n"
+			else:
+				for office in self.offices:
+					output += ("{}\n".format(office.room_name))
+
+			output += ("\n" + "*"*50 + "\n")
+			output += "LIVING SPACES\n"
+			output += ("*"*50 + "\n")
+			if len(self.living_spaces) == 0:
+				output += "No availabe living_spaces yet\n"
+			else:
+				for room in self.living_spaces:
+					output += ("{}\n".format(room.room_name))
+
+		# check if the user has given a file name
+		if file_name is None:
+			return(output)
+		else:
+			save_to = open(file_name + ".txt", "w")
+			save_to.write(output)
+			save_to.close()
+			return ("Data saved in {} successfully\n".format(file_name))
+
+
 	def load_people(self, filename):
 		""" Loads people from a file to system """
 		response = ""
