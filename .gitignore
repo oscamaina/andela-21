@@ -1,0 +1,8 @@
+/.env/
+/**/__pycache__/
+/**/.cache/
+venv/
+cover/
+cov_html
+/**/*.coverage
+/**/*.txt
